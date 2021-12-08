@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	
-<?import javafx.scene.layout.BorderPane?>
-	
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
-	<!-- TODO Add Nodes -->
-</BorderPane>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="955.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField layoutX="323.0" layoutY="262.0" prefHeight="38.0" prefWidth="309.0" />
+      <Button layoutX="323.0" layoutY="300.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="153.0" text="Αναζήτηση" />
+      <Button layoutX="479.0" layoutY="300.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="153.0" text="Περισσότερες επιλογές" />
+      <Button layoutX="862.0" layoutY="22.0" mnemonicParsing="false" text="Ρυθμίσεις" />
+      <Label layoutX="377.0" layoutY="119.0" text="TreSA">
+         <font>
+            <Font name="Bodoni MT Condensed" size="120.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
