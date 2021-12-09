@@ -2,37 +2,60 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="905.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SettingsController">
    <children>
       <Pane prefHeight="586.0" prefWidth="537.0" style="-fx-background-color: whire;">
          <children>
-            <Label layoutX="21.0" layoutY="14.0" text="Ρυθμίσεις Αρχείων">
+            <Label layoutX="21.0" layoutY="14.0" text="Settings">
                <font>
                   <Font size="28.0" />
                </font>
             </Label>
-            <Label layoutX="21.0" layoutY="118.0" text="Εισαγωγή Αρχείων:">
+            <Label layoutX="21.0" layoutY="118.0" text="Import Files:">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField layoutX="176.0" layoutY="118.0" prefHeight="25.0" prefWidth="171.0" />
-            <Button layoutX="351.0" layoutY="118.0" mnemonicParsing="false" text="Προσθήκη" />
-            <Label layoutX="21.0" layoutY="197.0" text="Διαγραφή Αρχείων:">
+            <TextField fx:id="tf_addingDocs" layoutX="129.0" layoutY="118.0" prefHeight="25.0" prefWidth="218.0" />
+            <Button fx:id="b_addingDocs" layoutX="351.0" layoutY="118.0" mnemonicParsing="false" onMouseClicked="#addingDocsButton" prefHeight="25.0" prefWidth="77.0" text="Add Files" />
+            <Label layoutX="21.0" layoutY="197.0" text="Delete Files:">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField layoutX="176.0" layoutY="197.0" prefHeight="25.0" prefWidth="171.0" />
-            <Button layoutX="351.0" layoutY="197.0" mnemonicParsing="false" text="Διαγραφή" />
-            <Button fx:id="b_back" layoutX="14.0" layoutY="547.0" mnemonicParsing="false" onAction="#backButton" text="Πίσω" />
+            <TextField fx:id="tf_deletingDocs" layoutX="129.0" layoutY="197.0" prefHeight="25.0" prefWidth="218.0" />
+            <Button fx:id="b_deletingDocs" layoutX="351.0" layoutY="197.0" mnemonicParsing="false" onMouseClicked="#deletingDocsButton" text="Delete Files" />
+            <Button fx:id="b_back" layoutX="14.0" layoutY="547.0" mnemonicParsing="false" onAction="#backButton" text="Back" />
+            <Text fx:id="t_add" fill="RED" layoutX="25.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+            <Text fx:id="t_delete" fill="RED" layoutX="25.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+            <Text fx:id="t_indexInfo" fill="#0400ff" layoutX="18.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
-      <Pane prefHeight="586.0" prefWidth="370.0" style="-fx-background-color: gray;" />
+      <Pane prefHeight="586.0" prefWidth="370.0" style="-fx-background-color: gray;">
+         <children>
+            <TextArea fx:id="ta_documents" editable="false" layoutX="51.0" layoutY="50.0" prefHeight="219.0" prefWidth="271.0" />
+            <Label layoutX="65.0" layoutY="24.0" text="Files that exist in Data folder:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="ta_docsInIndexer" editable="false" layoutX="53.0" layoutY="307.0" prefHeight="234.0" prefWidth="271.0" />
+            <Label layoutX="65.0" layoutY="285.0" text="Files that are successfully inserted in Indexer:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+         </children></Pane>
    </children>
 </HBox>

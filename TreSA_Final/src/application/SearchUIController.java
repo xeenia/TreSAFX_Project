@@ -16,6 +16,7 @@ public class SearchUIController {
 	@FXML
 	private Button b_back;
 	
+	//Going back to main UI if I click the TreSA logo
 	public void backButton(ActionEvent event) throws IOException{
 		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
 		Scene searchScene = new Scene(searchPage);

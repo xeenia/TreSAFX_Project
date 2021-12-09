@@ -32,12 +32,19 @@ public class MainUIController {
 	}
 
 	public void settingsButton(ActionEvent event) throws IOException {
-		Parent settingPage = FXMLLoader.load(getClass().getResource("Settings.fxml"));
-		Scene settingScene = new Scene(settingPage);
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("Settings.fxml"));
+		Parent settingPage = loader.load();
+		Scene settingScene = new Scene(settingPage);	
+	    SettingsController settingsController = loader.getController();
+	    settingsController.showFiles();
 		Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		settingStage.setScene(settingScene);
 		settingStage.show();
 		
 	}
+	
+
 	
 }
