@@ -4,7 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchUIController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ByFieldUIController">
    <top>
       <Pane prefHeight="106.0" prefWidth="948.0" style="-fx-background-color: #484A49;" BorderPane.alignment="CENTER">
          <children>
@@ -45,7 +45,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button fx:id="b_byField" mnemonicParsing="false" onAction="#byFieldButton" prefHeight="65.0" prefWidth="100.0" text="By Field">
+                              <Button mnemonicParsing="false" prefHeight="65.0" prefWidth="100.0" text="By Field">
                                  <font>
                                     <Font name="Century Schoolbook Bold" size="12.0" />
                                  </font>
@@ -70,7 +70,7 @@
                                     <Insets left="5.0" />
                                  </padding>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="65.0" prefWidth="100.0" text="Phrases" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Button fx:id="b_phrases" mnemonicParsing="false" onAction="#phrasesButton" prefHeight="65.0" prefWidth="100.0" text="Phrases" GridPane.columnIndex="1" GridPane.rowIndex="1">
                               <font>
                                     <Font name="Century Schoolbook Bold" size="12.0" />
                                  </font>
@@ -104,15 +104,80 @@
                   <VBox prefHeight="20.0" prefWidth="235.0" />
                   <VBox prefHeight="286.0" prefWidth="235.0" spacing="3.0" style="-fx-background-color: #D2CFCF;">
                      <children>
-                        <Pane prefHeight="21.0" prefWidth="235.0" />
-                        <TextArea prefHeight="209.0" prefWidth="235.0" promptText="Search.." />
-                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" text="Search">
+                        <Label text="Title:">
+                           <font>
+                              <Font name="Century Schoolbook Bold" size="14.0" />
+                           </font>
                            <VBox.margin>
-                              <Insets bottom="5.0" left="40.0" right="5.0" top="5.0" />
+                              <Insets left="5.0" />
                            </VBox.margin>
+                        </Label>
+                        <TextField prefHeight="25.0" prefWidth="214.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                        </TextField>
+                        <Label text="Person:">
+                           <font>
+                              <Font name="Century Schoolbook Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField prefHeight="25.0" prefWidth="214.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                        </TextField>
+                        <Label text="Place:">
+                           <font>
+                              <Font name="Century Schoolbook Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField prefHeight="25.0" prefWidth="143.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                        </TextField>
+                        <Label text="Content:">
+                           <font>
+                              <Font name="Century Schoolbook Bold" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField prefHeight="25.0" prefWidth="143.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                        </TextField>
+                        <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" text="Search">
                            <font>
                               <Font name="Century Schoolbook Bold" size="12.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="40.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </Button>
                      </children>
                   </VBox>

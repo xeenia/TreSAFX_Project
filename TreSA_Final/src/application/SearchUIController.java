@@ -15,6 +15,7 @@ public class SearchUIController {
 
 	@FXML
 	private Button b_back;
+	@FXML private Button b_byField;
 	
 	//Going back to main UI if I click the TreSA logo
 	public void backButton(ActionEvent event) throws IOException{
@@ -23,5 +24,17 @@ public class SearchUIController {
 		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		searchStage.setScene(searchScene);
 		searchStage.show();
+	}
+	
+	@FXML private void byFieldButton(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("ByFieldUI.fxml"));
+		Parent page = loader.load();
+		Scene scene = new Scene(page);	
+	    //SettingsController settingsController = loader.getController();
+	    //settingsController.showFiles();
+		Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		settingStage.setScene(scene);
+		settingStage.show();
 	}
 }
