@@ -28,7 +28,7 @@ public class Indexer extends PreProcessoring{
 		Path indexPath = Paths.get(indexDirectoryPath);
 		if(!Files.exists(indexPath)) {
 			 Files.createDirectory(indexPath);
-		 }
+		}
 		Directory indexDirectory = FSDirectory.open(indexPath);
 		// Create the indexer
 		IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
@@ -54,7 +54,6 @@ public class Indexer extends PreProcessoring{
 		return document;
 	}
 	
-	
 	private void indexFile(File file,TextArea indexingInfo) throws IOException {
 		String previousIndexingInfo = indexingInfo.getText();
 		indexingInfo.setText(previousIndexingInfo+"\n"+ "Indexing " + file.getName());
@@ -62,10 +61,8 @@ public class Indexer extends PreProcessoring{
 		writer.addDocument(document);
 	}
 	
-	public int createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
+	public int editIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
 		// Get all files in the data directory
-		
-		int i=0;
 		File[] files = new File(dataDirPath).listFiles();
 		for (File file : files) {
 			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
@@ -81,7 +78,20 @@ public class Indexer extends PreProcessoring{
 		
 		return writer.numRamDocs();
 	}
+	
+	public int createIndex(String dataDirPath, FileFilter filter, int i, TextArea indexingInfo) throws IOException {
+		// Creating an Index
+		File[] files = new File(dataDirPath).listFiles();
+		if(i == 1) { // Take all data
+			for (File file : files) {
+				if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){
+					indexFile(file,indexingInfo);
+				}
+			}
+		}
 
+		return writer.numRamDocs();
+	}
 
 	public void close() throws CorruptIndexException, IOException {
 		writer.close();

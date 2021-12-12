@@ -47,7 +47,7 @@ public class SettingsController {
 	Indexer indexer;
 	IndexWriter writer;
 
-	//showing the file names in text area that exist in Data folder
+	// Showing the file names in text area that exist in Data folder
 	public void showFiles() {
 		File[] files = new File(LuceneConstants.DATA_DIR).listFiles();
 		String fileNames="";
@@ -56,7 +56,8 @@ public class SettingsController {
 			ta_documents.setText(fileNames);
 		}
 	}
-	//going back to main UI when the back button its clicked
+	
+	// Going back to main UI when the back button is clicked
 	@FXML private void backButton(ActionEvent event) throws IOException {
 		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
 		Scene searchScene = new Scene(searchPage);
@@ -64,13 +65,15 @@ public class SettingsController {
 		searchStage.setScene(searchScene);
 		searchStage.show();
 	}
-	//we are taking the documents and send them to Indexer
+	
+	// Taking the documents and send them to Indexer
 	@FXML private void addingDocsButton(MouseEvent event) throws IOException {
 		ArrayList<String> documents = takeTheDocs(tf_addingDocs, t_add);
 		if(!documents.isEmpty())
 			createIndex(documents);	
 	}
-	//we are taking the documents and delete them from Indexer
+	
+	// Taking the documents and delete them from Indexer
 	@FXML private void deletingDocsButton(MouseEvent event) throws IOException {
 		ArrayList<String> documents = takeTheDocs(tf_deletingDocs,t_delete);
 		if(!documents.isEmpty()) {
@@ -121,14 +124,13 @@ public class SettingsController {
 		int numIndexed;
 		long startTime = System.currentTimeMillis();
 		ta_docsInIndexer.setText("");
-		numIndexed = indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_docsInIndexer);
+		numIndexed = indexer.createIndex(dataDir, new TextFileFilter(), 1,ta_docsInIndexer); // Creates an Index with all Data
 		long endTime = System.currentTimeMillis();		
 		indexer.close();
 		t_indexInfo.setText(numIndexed + " File(s) indexed, time taken: " + (endTime-startTime)+" ms");
 		if(!t_indexInfo.isVisible()) {
 			t_indexInfo.setVisible(true);
 		}
-			
 	}
 
 	public void deleteSpecificDocs(ArrayList<String> documents) throws IOException {
@@ -146,6 +148,7 @@ public class SettingsController {
 		}
 		writer.close();
 	}
+
 }
 
 
