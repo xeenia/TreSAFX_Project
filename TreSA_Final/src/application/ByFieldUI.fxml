@@ -56,7 +56,7 @@
                                     <Insets left="8.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="65.0" prefWidth="100.0" text="Boolean Queries" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1">
+                              <Button fx:id="b_boolean" mnemonicParsing="false" onAction="#booleanButton" prefHeight="65.0" prefWidth="100.0" text="Boolean Queries" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1">
                               	<font>
                                     <Font name="Century Schoolbook Bold" size="12.0" />
                                  </font>
@@ -81,7 +81,7 @@
                                     <Insets left="9.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="65.0" prefWidth="100.0" text="Vector Space" GridPane.rowIndex="1">
+                              <Button fx:id="b_vector" mnemonicParsing="false" onAction="#vectorButton" prefHeight="65.0" prefWidth="100.0" text="Vector Space" GridPane.rowIndex="1">
                               	<font>
                                     <Font name="Century Schoolbook Bold" size="12.0" />
                                  </font>

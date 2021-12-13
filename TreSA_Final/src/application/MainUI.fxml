@@ -9,7 +9,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="599.0" prefWidth="955.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainUIController">
    <children>
-      <TextField layoutX="323.0" layoutY="262.0" prefHeight="38.0" prefWidth="309.0">
+      <TextField fx:id="tf_search" layoutX="323.0" layoutY="262.0" prefHeight="38.0" prefWidth="309.0">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor></TextField>
@@ -28,6 +28,11 @@
       <Label layoutX="377.0" layoutY="119.0" text="TreSA">
          <font>
             <Font name="Bodoni MT Condensed" size="120.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorLabel" layoutX="342.0" layoutY="354.0" text="You need to search something!" textFill="RED" visible="false">
+         <font>
+            <Font name="Century Schoolbook" size="19.0" />
          </font>
       </Label>
    </children>

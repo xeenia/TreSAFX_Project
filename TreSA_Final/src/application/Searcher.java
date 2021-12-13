@@ -25,6 +25,7 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexReaderContext;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -42,18 +43,15 @@ public class Searcher {
 		indexSearcher = new IndexSearcher(indexReader);
 	}
 	
-	public TopDocs search(int choice, Scanner input) throws IOException, ParseException {
-		Scripts.Script(13);
-		if(choice == 2 ) { Scripts.Script(19); }
-		input.nextLine();
-		String searchQuery = input.nextLine();
+	public TopDocs search(int choice, String input) throws IOException, ParseException {
+		String searchQuery = input;
 		
 		switch(choice) {
 			case 1:
 				QueryParser queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 				query = queryParser.parse(searchQuery);
 				
-				System.out.println("query: "+ query.toString());
+				//System.out.println("query: "+ query.toString());
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 			case 2:
 				BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();

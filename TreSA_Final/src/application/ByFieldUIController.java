@@ -16,20 +16,43 @@ public class ByFieldUIController {
 	
 	@FXML private Button b_phrases;
 	@FXML private Button b_back;
+	@FXML private Button b_boolean;
+	@FXML private Button b_vector;
 	
 	@FXML private void phrasesButton(ActionEvent event) throws IOException{
-		Parent searchPage = FXMLLoader.load(getClass().getResource("SearchUI.fxml"));
-		Scene searchScene = new Scene(searchPage);
-		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		searchStage.setScene(searchScene);
-		searchStage.show();
+		Parent page = FXMLLoader.load(getClass().getResource("SearchUI.fxml"));
+		Scene scene = new Scene(page);
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		stage.setScene(scene);
+		stage.show();
 	}
 	
 	@FXML public void backButton(ActionEvent event) throws IOException{
-		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
-		Scene searchScene = new Scene(searchPage);
-		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		searchStage.setScene(searchScene);
-		searchStage.show();
+		Parent page = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
+		Scene scene = new Scene(page);
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		stage.setScene(scene);
+		stage.show();
+	}
+	
+	@FXML private void booleanButton(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("BooleanUI.fxml"));
+		Parent page = loader.load();
+		Scene scene = new Scene(page);	
+		BooleanUIController controller = loader.getController();
+		controller.setListView();
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		stage.setScene(scene);
+		stage.show();
+	}
+	@FXML private void vectorButton(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("VectorUI.fxml"));
+		Parent page = loader.load();
+		Scene scene = new Scene(page);	
+		Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		stage.setScene(scene);
+		stage.show();
 	}
 }
