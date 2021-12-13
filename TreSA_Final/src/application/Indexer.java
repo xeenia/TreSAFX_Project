@@ -61,38 +61,24 @@ public class Indexer extends PreProcessoring{
 		writer.addDocument(document);
 	}
 	
-	public int editIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
-		// Get all files in the data directory
+	public int createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
+
 		File[] files = new File(dataDirPath).listFiles();
 		for (File file : files) {
 			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
-				for(String str:articles) {
-					if(file.getName().contains(str)) {				        	
-						indexFile(file,indexingInfo);
-						articles.remove(str);
-						break;
-			        }
-				}
-			}
-		}
-		
-		return writer.numRamDocs();
-	}
-	
-	public int createIndex(String dataDirPath, FileFilter filter, int i, TextArea indexingInfo) throws IOException {
-		// Creating an Index
-		File[] files = new File(dataDirPath).listFiles();
-		if(i == 1) { // Take all data
-			for (File file : files) {
-				if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){
-					indexFile(file,indexingInfo);
-				}
+
+					for(String str:articles) {
+						if(file.getName().contains(str)) {				        	
+							indexFile(file,indexingInfo);
+							articles.remove(str);
+							break;
+				        }
+					}
 			}
 		}
 
 		return writer.numRamDocs();
 	}
-
 	public void close() throws CorruptIndexException, IOException {
 		writer.close();
 	}
