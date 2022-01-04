@@ -19,20 +19,22 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 
 public class Indexer extends PreProcessoring{
 	private IndexWriter writer;
 	
 	public Indexer(String indexDirectoryPath) throws IOException  {
-		// This directory will contain the indexes
-		Path indexPath = Paths.get(indexDirectoryPath);
-		if(!Files.exists(indexPath)) {
+		//this directory will contain the indexes
+		 Path indexPath = Paths.get(indexDirectoryPath);
+		 if(!Files.exists(indexPath)) {
 			 Files.createDirectory(indexPath);
-		}
-		Directory indexDirectory = FSDirectory.open(indexPath);
-		// Create the indexer
-		IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
-		writer = new IndexWriter(indexDirectory, config);
+		 }
+		 //Path indexPath = Files.createTempDirectory(indexDirectoryPath);
+		 Directory indexDirectory = FSDirectory.open(indexPath);
+		 //create the indexer
+		 IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
+		 writer = new IndexWriter(indexDirectory, config);
 	}
 
 	private Document getDocument(File file) throws IOException {
@@ -43,7 +45,6 @@ public class Indexer extends PreProcessoring{
 		
 		// Index file path
 		Field filePathField = new Field(LuceneConstants.FILE_PATH, file.getCanonicalPath(), StringField.TYPE_STORED);
-		
 		// Index content
 		// Processing contents of article and addition to document
 		document = preProcessing(document, file);
@@ -56,28 +57,38 @@ public class Indexer extends PreProcessoring{
 	
 	private void indexFile(File file,TextArea indexingInfo) throws IOException {
 		String previousIndexingInfo = indexingInfo.getText();
-		indexingInfo.setText(previousIndexingInfo+"\n"+ "Indexing " + file.getName());
+		indexingInfo.setText(previousIndexingInfo+ "Indexing " + file.getName()+"\n");
 		Document document = getDocument(file);
 		writer.addDocument(document);
 	}
 	
-	public int createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
-
+	public void createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo,Text text) throws IOException {
+		String previous = indexingInfo.getText();
+		File[] indexfiles = new File(LuceneConstants.INDEX_DIR).listFiles();
 		File[] files = new File(dataDirPath).listFiles();
 		for (File file : files) {
 			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
-
 					for(String str:articles) {
-						if(file.getName().contains(str)) {				        	
-							indexFile(file,indexingInfo);
+						if(file.getName().contains(str)) {	
+							String hits="0";
+							if(indexfiles.length!=1) {
+								Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+								 hits = searcher.getHits(str);
+							}
+							if(hits.contains("1")) {
+								previous = indexingInfo.getText();
+								indexingInfo.setText(previous+"The file: "+str+" already exist."+"\n");
+							}else
+								indexFile(file,indexingInfo);
 							articles.remove(str);
 							break;
 				        }
 					}
 			}
 		}
-
-		return writer.numRamDocs();
+		previous = indexingInfo.getText();
+		indexingInfo.setText(previous+writer.numRamDocs() + " File(s) indexed\n");
+		
 	}
 	public void close() throws CorruptIndexException, IOException {
 		writer.close();

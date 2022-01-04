@@ -27,7 +27,7 @@ public class DocumentFromSearch {
 				line=line.replace("</TITLE>","");
 				if(line.toLowerCase().contains(query.toLowerCase())) {
 					appearance.add(line);
-					appearanceType.add("title");
+					appearanceType.add(LuceneConstants.TITLE);
 				}		
 				title = title.concat(line);
 			}else if(line.contains("<PLACES>")) {
@@ -39,7 +39,7 @@ public class DocumentFromSearch {
 					place = place.concat(line);
 					if(line.toLowerCase().contains(query.toLowerCase())) {
 						appearance.add(line);
-						appearanceType.add("place");
+						appearanceType.add(LuceneConstants.PLACES);
 					}	
 				}
 			}else if(line.contains("<PEOPLE>")) {
@@ -51,7 +51,7 @@ public class DocumentFromSearch {
 					person = person.concat(line);
 					if(line.toLowerCase().contains(query.toLowerCase())) {
 						appearance.add(line);
-						appearanceType.add("person");
+						appearanceType.add(LuceneConstants.PEOPLE);
 					}
 						
 				}
@@ -60,7 +60,7 @@ public class DocumentFromSearch {
 				content = content.concat(line+"\n");
 				if(line.toLowerCase().contains(query.toLowerCase())) {
 					appearance.add(line);
-					appearanceType.add("body");
+					appearanceType.add(LuceneConstants.CONTENTS);
 				}	
 				while((line = reader.readLine()) != null) {
 					if(line.contains("</BODY>")) {
@@ -69,7 +69,7 @@ public class DocumentFromSearch {
 					content = content.concat(line+"\n");
 					if(line.toLowerCase().contains(query.toLowerCase())) {
 						appearance.add(line);
-						appearanceType.add("body");
+						appearanceType.add(LuceneConstants.CONTENTS);
 					}		
 				}
 				break;

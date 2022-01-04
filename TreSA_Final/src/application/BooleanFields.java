@@ -11,12 +11,15 @@ public class BooleanFields {
 	public BooleanFields() {
 		logicalButton = new Button();
 		logicalButton.setText("&&");
-		logicalButton.setPrefWidth(40);
+		logicalButton.setStyle("-fx-font-size:10");
+		logicalButton.setPrefWidth(31);
+		logicalButton.setPrefHeight(25);
 		ta1 = new TextField();
-		ta1.setPrefWidth(92);
+		ta1.setPromptText("w1 or !1");
+		ta1.setPrefWidth(85);
 		ta2= new TextField();
-		ta2.setPrefWidth(92);
-		
+		ta2.setPromptText("w2 or !w2");
+		ta2.setPrefWidth(85);
 		logicalButton.setOnAction((e)->{
 			String buttonName = logicalButton.getText();
 			if(buttonName.equals("&&"))
@@ -29,7 +32,7 @@ public class BooleanFields {
 		return logicalButton;
 	}
 	public void setLogicalButton(String buttonName) {
-		logicalButton.setText(buttonName);;
+		logicalButton.setText(buttonName);
 	}
 	public TextField getTextField1() {
 		return ta1;

@@ -2,7 +2,6 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -114,13 +113,12 @@ public class SettingsController {
 
 		private void createIndex(ArrayList<String> articles) throws IOException {
 			indexer = new Indexer(indexDir);
-			int numIndexed;
 			long startTime = System.currentTimeMillis();
 			ta_docsInIndexer.setText("");
-			numIndexed = indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_docsInIndexer);
+			indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_docsInIndexer,t_indexInfo);
 			long endTime = System.currentTimeMillis();		
 			indexer.close();
-			t_indexInfo.setText(numIndexed + " File(s) indexed, time taken: " + (endTime-startTime)+" ms");
+			//t_indexInfo.setText(numIndexed + " File(s) indexed, time taken: " + (endTime-startTime)+" ms");
 			if(!t_indexInfo.isVisible()) {
 				t_indexInfo.setVisible(true);
 			}

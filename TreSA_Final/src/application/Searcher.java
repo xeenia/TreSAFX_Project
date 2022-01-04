@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -20,12 +19,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexReaderContext;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -43,7 +39,7 @@ public class Searcher {
 		indexSearcher = new IndexSearcher(indexReader);
 	}
 	
-	public TopDocs search(int choice, String input) throws IOException, ParseException {
+	public TopDocs search(int choice, String input, String fieldType) throws IOException, ParseException {
 		String searchQuery = input;
 		
 		switch(choice) {
@@ -65,22 +61,22 @@ public class Searcher {
 					else if(arraySearchQueryBoolean.get(i).contains("^"))  { prevNOT= true; }
 					else {
 						if(prevAND) {
-							query = new TermQuery(new Term(LuceneConstants.CONTENTS, arraySearchQueryBoolean.get(i)));
+							query = new TermQuery(new Term(fieldType, arraySearchQueryBoolean.get(i)));
 							booleanQuery.add(query, BooleanClause.Occur.MUST);
 							prevAND = false;
 						}
 						else if(prevOR) {
-							query = new TermQuery(new Term(LuceneConstants.CONTENTS, arraySearchQueryBoolean.get(i)));
+							query = new TermQuery(new Term(fieldType, arraySearchQueryBoolean.get(i)));
 							booleanQuery.add(query, BooleanClause.Occur.SHOULD);
 							prevOR = false;
 						}
 						else if(prevNOT) {
-							query = new TermQuery(new Term(LuceneConstants.CONTENTS, arraySearchQueryBoolean.get(i)));
+							query = new TermQuery(new Term(fieldType, arraySearchQueryBoolean.get(i)));
 							booleanQuery.add(query, BooleanClause.Occur.MUST_NOT);
 							prevNOT = false;
 						}
 						else {
-							query = new TermQuery(new Term(LuceneConstants.CONTENTS, arraySearchQueryBoolean.get(i)));
+							query = new TermQuery(new Term(fieldType, arraySearchQueryBoolean.get(i)));
 							booleanQuery.add(query, BooleanClause.Occur.MUST);
 							if(i!=0){
 								booleanQuery.add(query, BooleanClause.Occur.MUST);
@@ -97,15 +93,36 @@ public class Searcher {
 				PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
 				List<String> arraySearchQueryPhrase = stringToArrayList(searchQuery);
 				for(String s:arraySearchQueryPhrase) {
-					phraseQuery.add(new Term(LuceneConstants.CONTENTS,s));
+					phraseQuery.add(new Term(fieldType,s));
 				}
-				
 				return indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
+			case 4:
+				PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
+				List<String> arraySearchQueryPhrase1 = stringToArrayList(input);
+				for(String s:arraySearchQueryPhrase1) {
+					fieldquery.add(new Term(fieldType,s));
+				}
+				return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
 		}
 		
 		return null;
 	}
-	
+	public String getHits(String filename) throws IOException {
+		PhraseQuery.Builder fieldQuery = new PhraseQuery.Builder();
+		String path = LuceneConstants.DATA_DIR+filename;
+		fieldQuery.add(new Term(LuceneConstants.FILE_PATH,path));
+		TopDocs hits = indexSearcher.search(fieldQuery.build(), LuceneConstants.MAX_SEARCH);
+		
+		return hits.scoreDocs.toString();
+	}
+	public TopDocs searchByField(String fieldType, String query) throws IOException {
+		PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
+		List<String> arraySearchQueryPhrase = stringToArrayList(query);
+		for(String s:arraySearchQueryPhrase) {
+			fieldquery.add(new Term(fieldType,s));
+		}
+		return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
+	}
 	public Document getDocument(ScoreDoc scoreDoc) throws CorruptIndexException, IOException {
 		return indexSearcher.doc(scoreDoc.doc);
 	}

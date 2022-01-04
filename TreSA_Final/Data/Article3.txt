@@ -1,5 +1,5 @@
 <PLACES>usabrazil</PLACES>
-<PEOPLE></PEOPLE>
+<PEOPLE>John</PEOPLE>
 <TITLE>TALKING POINT/BANKAMERICA <BAC> EQUITY OFFER</TITLE>
 <BODY>BankAmerica Corp is not under
 pressure to act quickly on its proposed equity offering and
