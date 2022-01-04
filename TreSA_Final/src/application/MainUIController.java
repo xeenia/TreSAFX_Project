@@ -55,6 +55,7 @@ public class MainUIController {
 		searchStage.show();
 		
 	}
+	
 	public void searchButton(ActionEvent event) throws IOException, ParseException{
 		String str = tf_search.getText();
 		errorLabel.setVisible(false);
@@ -75,12 +76,14 @@ public class MainUIController {
 			errorLabel.setVisible(true);
 		}
 	}
+	
 	private void advanceVisible(Boolean bl) {
 		rb_byFields.setVisible(bl);
 		rb_boolean.setVisible(bl);
 		rb_vector.setVisible(bl);
 		b_go.setVisible(bl);
 	}
+	
 	@FXML private void advanceButton(ActionEvent event) {
 		errorLabel.setVisible(false);
 		advanceVisible(b_go.isVisible()?false:true);
@@ -97,7 +100,5 @@ public class MainUIController {
 		settingStage.setScene(settingScene);
 		settingStage.show();
 	}
-	
 
-	
 }

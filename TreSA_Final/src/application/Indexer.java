@@ -58,8 +58,7 @@ public class Indexer extends PreProcessoring{
 	private void indexFile(File file,TextArea indexingInfo) throws IOException {
 		String previousIndexingInfo = indexingInfo.getText();
 		indexingInfo.setText(previousIndexingInfo+ "Indexing " + file.getName()+"\n");
-		Document document = getDocument(file);
-		writer.addDocument(document);
+		writer.addDocument(getDocument(file));
 	}
 	
 	public void createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo,Text text) throws IOException {

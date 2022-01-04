@@ -1,11 +1,17 @@
 package application;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -103,10 +109,25 @@ public class Searcher {
 					fieldquery.add(new Term(fieldType,s));
 				}
 				return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
+			case 5:
+				if (checkExistanceOfFile(searchQuery)){
+					queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
+					// SearchQuery should become LuceneConstants.CONTENTS of the file we searched
+					// (file name is inside searchQuery variable)
+
+					// Take LuceneConstants.CONTENTS of [filename].txt from Index
+					String documentContents = documentContext(searchQuery);
+					query = queryParser.parse(documentContents);
+					return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
+				}
+				else{
+					Scripts.Script(22);
+				}
 		}
 		
 		return null;
 	}
+	
 	public String getHits(String filename) throws IOException {
 		PhraseQuery.Builder fieldQuery = new PhraseQuery.Builder();
 		String path = LuceneConstants.DATA_DIR+filename;
@@ -115,6 +136,7 @@ public class Searcher {
 		
 		return hits.scoreDocs.toString();
 	}
+	
 	public TopDocs searchByField(String fieldType, String query) throws IOException {
 		PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
 		List<String> arraySearchQueryPhrase = stringToArrayList(query);
@@ -123,6 +145,7 @@ public class Searcher {
 		}
 		return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
 	}
+	
 	public Document getDocument(ScoreDoc scoreDoc) throws CorruptIndexException, IOException {
 		return indexSearcher.doc(scoreDoc.doc);
 	}
@@ -138,6 +161,40 @@ public class Searcher {
 		al = Arrays.asList(str);
 		
 		return al;
+	}
+	
+	public String documentContext(String searchQuery) throws IOException {
+		Set<String> h = new HashSet<>() {{ add(LuceneConstants.CONTENTS); }};
+		ArrayList<String> fileNumbers = new ArrayList<>();
+		for(int i=0 ; i < numberOfFiles() ; i++){
+			String s=String.valueOf(i);
+			fileNumbers.add(s);
+		}
+		Collections.sort(fileNumbers);
+		int positionInsideIndex=0;
+		searchQuery = searchQuery.replace("Article","");
+		for (String a: fileNumbers) {
+			if(a.equals(searchQuery)) { break; }
+			positionInsideIndex++;
+		}
+		Document documentSearched = indexReader.document(positionInsideIndex,h);
+		return documentSearched.toString();
+	}
+	
+	static long numberOfFiles() throws IOException {
+		try (Stream<Path> files = Files.list(Paths.get(LuceneConstants.DATA_DIR))) {
+		    return files.count();
+		}
+	}
+	
+	public boolean checkExistanceOfFile(String searchQuery) throws IOException {
+		PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
+		List<String> arraySearchQueryPhrase = stringToArrayList(searchQuery+".txt");
+		for (String s : arraySearchQueryPhrase) {
+			phraseQuery.add(new Term(LuceneConstants.FILE_NAME, s));
+		}
+		TopDocs hits = indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
+		return !hits.totalHits.toString().contains("0");
 	}
 	
 	public String logicReplacer(String s) {

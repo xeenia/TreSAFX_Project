@@ -76,19 +76,24 @@ public class DocumentFromSearch {
 			}
 		}
 	}
+	
 	public String getQueryAppereanceLine(String type){
 		int num = appearanceType.indexOf(type);
 		return appearance.get(num);
 	}
+	
 	public String getTitle() {
 		return title;
 	}
+	
 	public String getPerson() {
 		return person;
 	}
+	
 	public String getPlace() {
 		return place;
 	}
+	
 	public String getContent() {
 		return content;
 	}

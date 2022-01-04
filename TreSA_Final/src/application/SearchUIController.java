@@ -157,7 +157,7 @@ public class SearchUIController {
 			}
 			if(!(tf_fieldContents.getText().isBlank())) {
 				allFieldsAreBlank=false;
-				search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.CONTENTS,4);
+				search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4);
 			}
 			if(allFieldsAreBlank) {
 				l_errorMessage.setVisible(true);
@@ -193,10 +193,10 @@ public class SearchUIController {
 		search(query,LuceneConstants.CONTENTS,3);
 	}
 	public void search(String searchQuery, String fieldType, int choice) throws IOException, ParseException {
-		l_errorMessage.setVisible(false);
-		if(!lv_showedDocs.isVisible()) {
-			showDocVisible(false);
-		}
+		 l_errorMessage.setVisible(false);
+		 if(!lv_showedDocs.isVisible()) {
+		 	 showDocVisible(false);
+		 }
 		 Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
 		 long startTime = System.currentTimeMillis();
 		 TopDocs hits = searcher.search(choice, searchQuery,fieldType);
@@ -204,12 +204,31 @@ public class SearchUIController {
 		 DocumentFromSearch document;
 		 l_hits.setText(hits.totalHits +" documents found. Time :" + (endTime - startTime));
 		 l_hits.setVisible(true);
-		 for(ScoreDoc scoreDoc : hits.scoreDocs) {
-			 Document doc = searcher.getDocument(scoreDoc);
-			 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery);
-			 showDocuments(document, searchQuery,fieldType); 
+		 
+		 boolean articleComp = false;
+		 // This "If" expression: If the user selected option 5 (article comparison) enter first option 
+		 if(articleComp) {
+			 	// Prints from higher to lower scores for article comparison
+				int n = 0;
+				for (ScoreDoc scoreDoc : hits.scoreDocs) {
+					if (n == 0) {
+						n++;
+						continue;
+					}
+					Document doc = searcher.getDocument(scoreDoc);
+					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery);
+					showDocuments(document, searchQuery,fieldType); 
+					n++;
+				}
+			}
+		 else {
+			 for(ScoreDoc scoreDoc : hits.scoreDocs) {
+				 Document doc = searcher.getDocument(scoreDoc);
+				 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery);
+				 showDocuments(document, searchQuery,fieldType); 
+			 }
 		 }
-		 	searcher.close();
+		 searcher.close();
    }
  	
  	public void setBooleanListView() {
@@ -218,6 +237,8 @@ public class SearchUIController {
 		hbox.getChildren().addAll(booleanFields.getTextField1(),booleanFields.getLogicalButton(),booleanFields.getTextField2());
 		lv_booleanModel.getItems().add(hbox);
 	}
+ 	
+ 	
 	@FXML private void addBoolean(ActionEvent event) {
 		if(lv_booleanModel.getItems().size()<7) {
 			booleanFields = new BooleanFields();
@@ -225,8 +246,8 @@ public class SearchUIController {
 			hbox.getChildren().addAll(booleanFields.getTextField1(),booleanFields.getLogicalButton(),booleanFields.getTextField2());
 			lv_booleanModel.getItems().add(hbox);
 		}
-		
 	}
+	
 	@FXML private void removeBoolean(ActionEvent event) {
 		if(lv_booleanModel.getItems().size()!=1)
 			lv_booleanModel.getItems().remove(lv_booleanModel.getItems().size()-1);
@@ -235,6 +256,10 @@ public class SearchUIController {
 	@FXML private void showedDocBackButton(ActionEvent event) throws IOException, ParseException {
 		showDocVisible(false);
 	}
+	
+	
+	
+	
 	private void showDocVisible(Boolean bl) {
 		lv_showedDocs.setVisible(!bl);
 		t_title.setVisible(bl);
@@ -245,6 +270,8 @@ public class SearchUIController {
 		l_selectedDocPeople.setVisible(bl);
 		l_selectedDocPlaces.setVisible(bl);
 	}
+	
+	
 	public void showDetailedDocument(DocumentFromSearch document) {
 		showDocVisible(true);
 		t_title.setText(document.getTitle());
@@ -252,7 +279,6 @@ public class SearchUIController {
 		t_places.setText(document.getPlace());
 		t_contents.setText(document.getContent());
 	}
-	
 	
 	public void showDocuments(DocumentFromSearch document, String searchQuery,String fieldtype){
 		Hyperlink link = makeHyperLink(document.getTitle(),document,searchQuery);
