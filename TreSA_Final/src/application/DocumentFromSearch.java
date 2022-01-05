@@ -11,7 +11,9 @@ public class DocumentFromSearch {
 	private String person;
 	private String place;
 	private String content;
+	//we save the line where the query was found
 	private ArrayList<String> appearance;
+	//and also the field type (title,person etc.)
 	private ArrayList<String> appearanceType;
 	private String[] splittedQuery;
 	private Boolean isBooleanModel;
@@ -51,6 +53,7 @@ public class DocumentFromSearch {
 						System.out.println(appearanceType.size()+"index "+appearanceType.get(0));
 					}		
 		//		}
+				//we save the title without the HTML 
 				title = title.concat(line);
 			}else if(line.contains("<PLACES>")) {
 				line=line.replace("<PLACES>","");
@@ -104,10 +107,12 @@ public class DocumentFromSearch {
 				line=line.replace("<BODY>","");
 				content = content.concat(line+"\n");
 				if(isBooleanModel) {
+					//if we have for example vegan && vegeterian then we must search both words, we don't know which word exist in the specific doc
 					for(int i=0;i<splittedQuery.length;i++) {
 						if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
 							System.out.println("appearanceCONTENTS:"+line+" "+query);
 							appearance.add(line);
+							//body for field search and contents for vector or phrase search
 							appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.BODY);
 						}
 					}
@@ -144,6 +149,7 @@ public class DocumentFromSearch {
 	}
 	
 	public String getQueryAppereanceLine(String type){
+		//return the line where the query was appeared
 		int num = appearanceType.indexOf(type);
 		return appearance.get(num);
 	}
