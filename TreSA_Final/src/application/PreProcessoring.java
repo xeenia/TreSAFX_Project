@@ -29,13 +29,16 @@ public class PreProcessoring{
 			else {
 				if(i == 0) {  // PLACES
 					line = removingHTML(line,1);
+					System.out.println("Places: "+line);
 					document.add(new Field(LuceneConstants.PLACES, line, StringField.TYPE_STORED)); 
 				} else if( i == 1) { // PEOPLE
 					line = removingHTML(line,2);
+					System.out.println("People: "+line);
 					document.add(new Field(LuceneConstants.PEOPLE, line, StringField.TYPE_STORED)); 
 				} else if( i == 2) { // TITLE
 					line = removingHTML(line,3); 
 					line = removingPunctuation(line);
+					System.out.println("Title: "+line);
 					document.add(new Field(LuceneConstants.TITLE, line, StringField.TYPE_STORED));
 				}
 				entireText.append(line + " ");
@@ -53,6 +56,7 @@ public class PreProcessoring{
 		line = removingPunctuation(line); 
 		line = removingStopwords(line);
 		entireText.append(line);
+		System.out.println("Body: "+line);
 		document.add(new Field(LuceneConstants.BODY, line, StringField.TYPE_STORED));
 
 		// For general searches

@@ -1,5 +1,5 @@
 <PLACES>usa</PLACES>
-<PEOPLE></PEOPLE>
+<PEOPLE>Mary</PEOPLE>
 <TITLE>DEAN FOODS <DF> SEES STRONG 4TH QTR EARNINGS</TITLE>
 <BODY>Dean Foods Co expects earnings for the
 fourth quarter ending May 30 to exceed those of the same

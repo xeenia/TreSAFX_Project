@@ -53,7 +53,7 @@ public class Searcher {
 				QueryParser queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 				query = queryParser.parse(searchQuery);
 				
-				//System.out.println("query: "+ query.toString());
+				System.out.println("query: "+ query.toString());
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 			case 2:
 				BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
@@ -103,12 +103,15 @@ public class Searcher {
 				}
 				return indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
 			case 4:
-				PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
-				List<String> arraySearchQueryPhrase1 = stringToArrayList(input);
-				for(String s:arraySearchQueryPhrase1) {
-					fieldquery.add(new Term(fieldType,s));
-				}
-				return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
+//				PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
+//				List<String> arraySearchQueryPhrase1 = stringToArrayList(input);
+//				for(String s:arraySearchQueryPhrase1) {
+//					fieldquery.add(new Term(fieldType,s));
+//				}
+				QueryParser parser = new QueryParser(fieldType, new StandardAnalyzer());
+				Query query2 = parser.parse(searchQuery);
+				System.out.println("query:"+query2);
+				return indexSearcher.search(query2, LuceneConstants.MAX_SEARCH);
 			case 5:
 				if (checkExistanceOfFile(searchQuery)){
 					queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());

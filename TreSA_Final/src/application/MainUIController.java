@@ -36,18 +36,14 @@ public class MainUIController {
 		SearchUIController controller = loader.getController();
 		if(rb_byFields.isSelected()) {
 			controller.optionSelected(2);	
-			controller.setBooleanListView();
 			controller.tb_field.setSelected(true);
 		}else if(rb_boolean.isSelected()) {
 			controller.optionSelected(3);
-			controller.setBooleanListView();
 			controller.tb_boolean.setSelected(true);
 		}else {
 			controller.optionSelected(1);
 			controller.tb_vector.setSelected(true);
-			controller.setBooleanListView();
 			controller.transferQuery(tf_search.getText());	
-			
 		}	
 		Scene searchScene = new Scene(searchPage);
 		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -66,7 +62,6 @@ public class MainUIController {
 			Scene searchScene = new Scene(searchPage);
 			SearchUIController controller = loader.getController();	
 			controller.optionSelected(1);
-			controller.setBooleanListView();
 			controller.transferQuery(tf_search.getText());
 			Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			searchStage.setScene(searchScene);
@@ -78,6 +73,7 @@ public class MainUIController {
 	}
 	
 	private void advanceVisible(Boolean bl) {
+		rb_byFields.setSelected(true);
 		rb_byFields.setVisible(bl);
 		rb_boolean.setVisible(bl);
 		rb_vector.setVisible(bl);

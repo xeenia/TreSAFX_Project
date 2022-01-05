@@ -17,9 +17,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -27,7 +28,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class SearchUIController {
-	BooleanFields booleanFields;
 	@FXML private TextField tf_search;
 	@FXML private TextField tf_fieldTitle;
 	@FXML private TextField	tf_fieldPeople;
@@ -36,9 +36,8 @@ public class SearchUIController {
 	
 	@FXML private Button b_clear;
 	@FXML private Button b_search;
-	@FXML private Button b_booleanAdd;
-	@FXML private Button b_booleanDelete;
 	@FXML private Button b_back;
+	@FXML private Button b_showedDocBackButton;
 	
 	@FXML protected ToggleButton tb_phrases;
 	@FXML protected ToggleButton tb_vector;
@@ -46,7 +45,6 @@ public class SearchUIController {
 	@FXML protected ToggleButton tb_boolean;
 	
 	@FXML private ListView<VBox> lv_showedDocs;
-	@FXML private ListView<HBox> lv_booleanModel;
 	
 	@FXML Label l_title;
 	@FXML Label l_people;
@@ -54,15 +52,16 @@ public class SearchUIController {
 	@FXML Label l_contents;
 	@FXML Label l_errorMessage;
 	@FXML Label l_hits;
+	@FXML Label l_example;
 	
 	@FXML private Text t_title;
 	@FXML private Text t_people;
 	@FXML private Text t_places;
 	@FXML private Text t_contents;
 	
-	@FXML private Label l_selectedDocPeople;
-	@FXML private Label l_selectedDocPlaces;
-	@FXML private Button b_showedDocBackButton;
+	@FXML private ScrollPane scroll;
+	@FXML private VBox contentvbox;
+	@FXML private TextArea tx_booleanModel;
 	
 	@FXML private void goBackLogo(ActionEvent event) throws IOException {
 		Parent page = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
@@ -88,16 +87,23 @@ public class SearchUIController {
 	}
 	@FXML private void phrasesToddlerButton(ActionEvent event) {
 		optionSelected(1);
+		l_example.setVisible(true);
+		l_example.setText("Example: What Comissaria said");
 	}
 	@FXML private void vectorToddlerButton(ActionEvent event) {
 		optionSelected(1);
-		
+		l_example.setVisible(true);
+		l_example.setText("Example: cocoa");
 	}
 	@FXML private void booleanToddlerButton(ActionEvent event) {
 		optionSelected(3);
+		l_example.setVisible(true);
+		l_example.setText("Example: cocoa && bahia"+"\n\n&&: Logical AND\n||: Logical OR\n^: Logical NOT");
 	}
 	@FXML private void fieldsToddlerButton(ActionEvent event) {
 		optionSelected(2);
+		l_example.setVisible(true);
+		l_example.setText("Search something specific.");
 	}
 	private void setDisability(int choice, Boolean bl) {
 		switch(choice) {
@@ -116,13 +122,12 @@ public class SearchUIController {
 				l_contents.setDisable(bl);
 				break;
 			case 3:
-				lv_booleanModel.setDisable(bl);
-				b_booleanAdd.setDisable(bl);
-				b_booleanDelete.setDisable(bl);
+				tx_booleanModel.setDisable(bl);
 				break;
 		}
 	}
 	@FXML private void searchButton(ActionEvent event) throws IOException, ParseException{
+		
 		if(tb_phrases.isSelected()) {
 			String str = tf_search.getText().toLowerCase();
 			if(!str.isBlank()) {
@@ -137,8 +142,10 @@ public class SearchUIController {
 			String str = tf_search.getText();
 			if(!str.isBlank()) {
 				l_errorMessage.setVisible(false);
+				search(tf_search.getText().toLowerCase(),LuceneConstants.CONTENTS,1);
 			}else {
 				l_errorMessage.setVisible(true);
+				l_errorMessage.setText("You must search something.");
 			}
 		}else if(tb_field.isSelected()) {
 			lv_showedDocs.getItems().clear();
@@ -164,10 +171,10 @@ public class SearchUIController {
 				l_errorMessage.setText("You must search atleast one field.");
 			}
 		}else if(tb_boolean.isSelected()) {
-			String str = "idk";
-			if(!str.isBlank()) {
+			String isBlank = tx_booleanModel.getText();
+			if(isBlank.length()!=0) {
 				l_errorMessage.setVisible(false);
-				search(str,LuceneConstants.CONTENTS,4);
+				search(isBlank,LuceneConstants.CONTENTS,2);
 			}else {
 				l_errorMessage.setVisible(true);
 			}
@@ -182,7 +189,7 @@ public class SearchUIController {
 			tf_fieldPlaces.setText("");
 			tf_fieldContents.setText("");
 		}else if(tb_boolean.isSelected()) {
-			
+			tx_booleanModel.setText("");
 		}
 	}
 	public void setListView() {
@@ -204,7 +211,7 @@ public class SearchUIController {
 		 DocumentFromSearch document;
 		 l_hits.setText(hits.totalHits +" documents found. Time :" + (endTime - startTime));
 		 l_hits.setVisible(true);
-		 
+		 lv_showedDocs.getItems().clear();
 		 boolean articleComp = false;
 		 // This "If" expression: If the user selected option 5 (article comparison) enter first option 
 		 if(articleComp) {
@@ -216,7 +223,8 @@ public class SearchUIController {
 						continue;
 					}
 					Document doc = searcher.getDocument(scoreDoc);
-					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery);
+					
+					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_NAME), searchQuery,fieldType);
 					showDocuments(document, searchQuery,fieldType); 
 					n++;
 				}
@@ -224,53 +232,26 @@ public class SearchUIController {
 		 else {
 			 for(ScoreDoc scoreDoc : hits.scoreDocs) {
 				 Document doc = searcher.getDocument(scoreDoc);
-				 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery);
+				 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,fieldType);
 				 showDocuments(document, searchQuery,fieldType); 
 			 }
 		 }
 		 searcher.close();
    }
- 	
- 	public void setBooleanListView() {
-		booleanFields = new BooleanFields();
-		HBox hbox = new HBox();
-		hbox.getChildren().addAll(booleanFields.getTextField1(),booleanFields.getLogicalButton(),booleanFields.getTextField2());
-		lv_booleanModel.getItems().add(hbox);
-	}
- 	
- 	
-	@FXML private void addBoolean(ActionEvent event) {
-		if(lv_booleanModel.getItems().size()<7) {
-			booleanFields = new BooleanFields();
-			HBox hbox = new HBox();
-			hbox.getChildren().addAll(booleanFields.getTextField1(),booleanFields.getLogicalButton(),booleanFields.getTextField2());
-			lv_booleanModel.getItems().add(hbox);
-		}
-	}
-	
-	@FXML private void removeBoolean(ActionEvent event) {
-		if(lv_booleanModel.getItems().size()!=1)
-			lv_booleanModel.getItems().remove(lv_booleanModel.getItems().size()-1);
-	}	
 
 	@FXML private void showedDocBackButton(ActionEvent event) throws IOException, ParseException {
 		showDocVisible(false);
 	}
-	
-	
-	
-	
+
 	private void showDocVisible(Boolean bl) {
 		lv_showedDocs.setVisible(!bl);
+		scroll.setVisible(bl);
 		t_title.setVisible(bl);
 		t_people.setVisible(bl);
 		t_places.setVisible(bl);
 		t_contents.setVisible(bl);
 		b_showedDocBackButton.setVisible(bl);
-		l_selectedDocPeople.setVisible(bl);
-		l_selectedDocPlaces.setVisible(bl);
 	}
-	
 	
 	public void showDetailedDocument(DocumentFromSearch document) {
 		showDocVisible(true);
@@ -294,10 +275,28 @@ public class SearchUIController {
 		TextFlow textFlow = new TextFlow();
 		String line = doc.getQueryAppereanceLine(fieldtype);
 		String lowerCaseLine = line.toLowerCase();
+		String[] splittedQuery= {""};
+		if(query.contains("&&")||query.contains("||")) {
+			splittedQuery = query.split(" ");
+		}
+		String secondPart="";
+		String firstPart="";
+		if(splittedQuery.length==1) {
+			secondPart = line.substring(lowerCaseLine.indexOf(query));
+			secondPart = secondPart.substring(query.length());
+			firstPart = line.substring(0,lowerCaseLine.indexOf(query));
+		}else {
+			for(int i=0; i<splittedQuery.length;i++) {
+				if(lowerCaseLine.contains(splittedQuery[i])) {
+					secondPart = line.substring(lowerCaseLine.indexOf(splittedQuery[i]));
+					secondPart = secondPart.substring(splittedQuery[i].length());
+					firstPart = line.substring(0,lowerCaseLine.indexOf(splittedQuery[i]));
+					query=splittedQuery[i];
+					break;
+				}
+			}
+		}
 		
-		String secondPart = line.substring(lowerCaseLine.indexOf(query));
-		secondPart = secondPart.substring(query.length());
-		String firstPart = line.substring(0,lowerCaseLine.indexOf(query));
 		Text text1 = new Text();
 		Text text2 = new Text();
 		Text text3 = new Text();

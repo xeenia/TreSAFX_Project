@@ -1,5 +1,5 @@
 <PLACES>el-salvadorusauruguay</PLACES>
-<PEOPLE></PEOPLE>
+<PEOPLE>Mery</PEOPLE>
 <TITLE>BAHIA COCOA REVIEW</TITLE>
 <BODY>Showers continued throughout the week in
 the Bahia cocoa zone, alleviating the drought since early
