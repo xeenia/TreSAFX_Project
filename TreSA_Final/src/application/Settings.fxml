@@ -33,13 +33,16 @@
             <TextField fx:id="tf_deletingDocs" layoutX="129.0" layoutY="197.0" prefHeight="25.0" prefWidth="218.0" />
             <Button fx:id="b_deletingDocs" layoutX="351.0" layoutY="197.0" mnemonicParsing="false" onMouseClicked="#deletingDocsButton" text="Delete Files" />
             <Button fx:id="b_back" layoutX="14.0" layoutY="547.0" mnemonicParsing="false" onAction="#backButton" text="Back" />
-            <Text fx:id="t_add" fill="RED" layoutX="25.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
-            <Text fx:id="t_delete" fill="RED" layoutX="25.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
-            <Text fx:id="t_indexInfo" fill="#0400ff" layoutX="18.0" layoutY="363.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false">
+            <Text fx:id="t_add" fill="RED" layoutX="25.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="t_delete" fill="RED" layoutX="25.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="t_indexInfo" fill="#0400ff" layoutX="438.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font>
             </Text>
+            <Label layoutX="20.0" layoutY="64.0" text="1 file: ArticleX.txt" />
+            <Label layoutX="20.0" layoutY="81.0" text="Multiple files: Article4.txt Article6.txt Article9.txt " />
+            <Label layoutX="20.0" layoutY="98.0" text="Multiple files: Article6.txt-Article16.txt" />
          </children>
       </Pane>
       <Pane prefHeight="586.0" prefWidth="370.0" style="-fx-background-color: gray;">

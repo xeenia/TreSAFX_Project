@@ -11,21 +11,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class MainUIController {
 	@FXML private Button b_search;
 	@FXML private Button b_advance;
-	@FXML private Button b_settings;
 	@FXML private TextField tf_search;
 	@FXML private Label errorLabel;
 	@FXML private RadioButton rb_byFields;
 	@FXML private RadioButton rb_boolean;
 	@FXML private RadioButton rb_vector;
 	@FXML private Button b_go;
+	@FXML private Hyperlink h_settings;
 	
 	
 	public void searchButton(ActionEvent event) throws IOException, ParseException{
@@ -50,7 +52,18 @@ public class MainUIController {
 			errorLabel.setVisible(true);
 		}
 	}
-	
+	@FXML private void settingsHyperlink(MouseEvent event) throws IOException {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("Settings.fxml"));
+			Parent settingPage;
+			settingPage = loader.load();
+			Scene settingScene = new Scene(settingPage);	
+		    SettingsController settingsController = loader.getController();
+		    settingsController.showFiles();
+			Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			settingStage.setScene(settingScene);
+			settingStage.show();
+	}
 	private void advanceVisible(Boolean bl) {
 		rb_byFields.setSelected(true);
 		rb_byFields.setVisible(bl);
@@ -91,18 +104,4 @@ public class MainUIController {
 			searchStage.setScene(searchScene);
 			searchStage.show();
 		}
-
-	//go to the setting scene
-	public void settingsButton(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("Settings.fxml"));
-		Parent settingPage = loader.load();
-		Scene settingScene = new Scene(settingPage);	
-	    SettingsController settingsController = loader.getController();
-	    settingsController.showFiles();
-		Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		settingStage.setScene(settingScene);
-		settingStage.show();
-	}
-
 }

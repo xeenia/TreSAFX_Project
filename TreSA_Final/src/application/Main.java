@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.fxml.FXMLLoader;
 import java.io.File;
 import java.net.URL;
@@ -16,9 +17,6 @@ public class Main extends Application {
 			//everything that happens in main scene are in MainUIController.java class
 			Parent root = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
 			Scene scene = new Scene(root);
-			 URL url = this.getClass().getResource("application.css");
-			 String css = url.toExternalForm(); 
-			scene.getStylesheets().add(css);
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.show();

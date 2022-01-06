@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
@@ -17,9 +18,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="744.0" prefWidth="1137.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchUIController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="744.0" prefWidth="1137.0" style="-fx-background-color: #423F3E;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SearchUIController">
    <top>
-      <Pane prefHeight="78.0" prefWidth="948.0" style="-fx-background-color: #484A49;" BorderPane.alignment="CENTER">
+      <Pane prefHeight="78.0" prefWidth="948.0" style="-fx-background-color: #423F3E;" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="b_back" layoutY="-8.0" mnemonicParsing="false" onAction="#goBackLogo" style="-fx-background-color: transparent;" text="TreSA" textFill="WHITE">
                <font>
@@ -29,20 +30,21 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <Separator layoutY="75.0" prefHeight="0.0" prefWidth="1137.0" />
          </children>
       </Pane>
    </top>
    <center>
       <VBox prefHeight="619.0" prefWidth="886.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="l_hits" text="Label" textFill="#0022ff" visible="false">
+            <Label fx:id="l_hits" text="Label" textFill="WHITE" visible="false">
                <font>
                   <Font name="Century Schoolbook Bold" size="15.0" />
                </font>
             </Label>
             <Pane prefHeight="631.0" prefWidth="857.0">
                <children>
-                  <ListView fx:id="lv_showedDocs" layoutX="-2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="634.0" prefWidth="827.0" />
+                  <ListView fx:id="lv_showedDocs" layoutX="-2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="632.0" prefWidth="827.0" style="-fx-background-color: #423F3E;" stylesheets="@application.css" />
                   <ScrollPane fx:id="scroll" layoutY="-3.0" prefHeight="637.0" prefWidth="828.0" visible="false">
                      <content>
                         <VBox fx:id="contentvbox" prefHeight="631.0" prefWidth="827.0">
@@ -101,27 +103,33 @@
       </VBox>
    </center>
    <left>
-      <VBox alignment="TOP_CENTER" prefHeight="649.0" prefWidth="298.0" BorderPane.alignment="TOP_RIGHT">
+      <VBox alignment="TOP_CENTER" prefHeight="641.0" prefWidth="298.0" style="-fx-background-color: #423F3E;" BorderPane.alignment="TOP_RIGHT">
          <children>
-            <Label text="Search Options">
+            <Label text="Search Options" textFill="WHITE">
                <font>
                   <Font name="Century Schoolbook Bold Italic" size="20.0" />
                </font>
             </Label>
             <Pane prefHeight="87.0" prefWidth="235.0">
                <children>
-                  <ToggleButton fx:id="tb_phrases" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#phrasesToddlerButton" prefHeight="30.0" prefWidth="135.0" selected="true" text="Phrases">
+                  <ToggleButton fx:id="tb_phrases" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#phrasesToddlerButton" prefHeight="30.0" prefWidth="135.0" selected="true" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Phrases" textFill="WHITE">
                      <toggleGroup>
                         <ToggleGroup fx:id="searchOptions" />
                      </toggleGroup>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </ToggleButton>
-                  <ToggleButton fx:id="tb_vector" layoutX="152.0" layoutY="14.0" mnemonicParsing="false" onAction="#vectorToddlerButton" prefHeight="30.0" prefWidth="130.0" text="Vector Space" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_vector" layoutX="152.0" layoutY="14.0" mnemonicParsing="false" onAction="#vectorToddlerButton" prefHeight="30.0" prefWidth="130.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Vector Space" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
-                        <Cursor fx:constant="OPEN_HAND" />
+                        <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </ToggleButton>
                   <TextField fx:id="tf_search" layoutX="13.0" layoutY="57.0" prefHeight="25.0" prefWidth="271.0">
                      <cursor>
@@ -132,73 +140,96 @@
             </Pane>
             <Pane prefHeight="255.0" prefWidth="235.0">
                <children>
-                  <ToggleButton fx:id="tb_field" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#fieldsToddlerButton" prefHeight="30.0" prefWidth="272.0" text="By Field" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_field" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#fieldsToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="By Field" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </ToggleButton>
-                  <Label fx:id="l_title" disable="true" layoutX="15.0" layoutY="44.0" text="Title">
+                  <Label fx:id="l_title" disable="true" layoutX="15.0" layoutY="50.0" text="Title" textFill="WHITE">
                      <font>
-                        <Font name="System Bold Italic" size="15.0" />
+                        <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="269.0">
+                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="269.0" promptText="Search for Title">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <Label fx:id="l_people" disable="true" layoutX="16.0" layoutY="95.0" text="People">
+                  <Label fx:id="l_people" disable="true" layoutX="16.0" layoutY="100.0" text="People" textFill="WHITE">
                      <font>
-                        <Font name="System Bold Italic" size="15.0" />
+                        <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0">
+                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0" promptText="Search for a Person">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="267.0">
+                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="267.0" promptText="Search for a Place">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="267.0">
+                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="267.0" promptText="Search in Content">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <Label fx:id="l_places" disable="true" layoutX="18.0" layoutY="146.0" text="Places">
+                  <Label fx:id="l_places" disable="true" layoutX="18.0" layoutY="152.0" text="Places" textFill="WHITE">
                      <font>
-                        <Font name="System Bold Italic" size="15.0" />
+                        <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="l_contents" disable="true" layoutX="19.0" layoutY="197.0" text="Content">
+                  <Label fx:id="l_contents" disable="true" layoutX="19.0" layoutY="204.0" text="Content" textFill="WHITE">
                      <font>
-                        <Font name="System Bold Italic" size="15.0" />
+                        <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <Pane prefHeight="227.0" prefWidth="235.0" VBox.vgrow="ALWAYS">
+            <Pane prefHeight="282.0" prefWidth="302.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ToggleButton fx:id="tb_boolean" layoutX="13.0" layoutY="5.0" mnemonicParsing="false" onAction="#booleanToddlerButton" prefHeight="30.0" prefWidth="272.0" text="Boolean Model" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_boolean" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#booleanToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Boolean Model" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </ToggleButton>
-                  <Button fx:id="b_search" layoutX="13.0" layoutY="98.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="30.0" prefWidth="80.0" text="Search">
+                  <Button fx:id="b_search" layoutX="13.0" layoutY="98.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Search" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </Button>
-                  <Button fx:id="b_clear" layoutX="107.0" layoutY="99.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" prefWidth="80.0" text="Clear">
+                  <Button fx:id="b_clear" layoutX="107.0" layoutY="99.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Clear" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
                   </Button>
                   <Label fx:id="l_example" layoutX="22.0" layoutY="141.0" text="Example" visible="false" />
-                  <Button fx:id="b_showedDocBackButton" layoutX="200.0" layoutY="99.0" mnemonicParsing="false" onAction="#showedDocBackButton" prefHeight="30.0" prefWidth="80.0" text="Back" />
-                  <TextArea fx:id="tx_booleanModel" layoutX="14.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" />
+                  <Button fx:id="b_showedDocBackButton" layoutX="200.0" layoutY="99.0" mnemonicParsing="false" onAction="#showedDocBackButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Back" textFill="WHITE">
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+                  <TextArea fx:id="tx_booleanModel" layoutX="14.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" promptText="Search with &amp;&amp;, || and ^" />
+                  <Label fx:id="l_errorMessage" layoutX="15.0" layoutY="150.0" text="errorMessage" textFill="WHITE" visible="false">
+                     <font>
+                        <Font name="System Bold Italic" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
          </children>
@@ -207,11 +238,4 @@
    <right>
       <Label prefHeight="17.0" prefWidth="16.0" text="Label" visible="false" BorderPane.alignment="CENTER" />
    </right>
-   <bottom>
-      <Label fx:id="l_errorMessage" text="errorMessage" textFill="RED" visible="false" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="System Bold Italic" size="12.0" />
-         </font>
-      </Label>
-   </bottom>
 </BorderPane>

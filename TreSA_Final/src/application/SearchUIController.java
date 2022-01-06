@@ -125,23 +125,23 @@ public class SearchUIController {
 	//when i choose a button the current search option will become editable and an example will appear
 	@FXML private void phrasesToddlerButton(ActionEvent event) {
 		optionSelected(1);
-		l_example.setVisible(true);
-		l_example.setText("Example: What Comissaria said");
+		//l_example.setVisible(true);
+		//l_example.setText("Example: What Comissaria said");
 	}
 	@FXML private void vectorToddlerButton(ActionEvent event) {
 		optionSelected(1);
-		l_example.setVisible(true);
-		l_example.setText("Example: cocoa");
+		//l_example.setVisible(true);
+	//	l_example.setText("Example: cocoa");
 	}
 	@FXML private void booleanToddlerButton(ActionEvent event) {
 		optionSelected(3);
-		l_example.setVisible(true);
-		l_example.setText("Example: cocoa && bahia"+"\n\n&&: Logical AND\n||: Logical OR\n^: Logical NOT");
+		//l_example.setVisible(true);
+		//l_example.setText("Example: cocoa && bahia"+"\n\n&&: Logical AND\n||: Logical OR\n^: Logical NOT");
 	}
 	@FXML private void fieldsToddlerButton(ActionEvent event) {
 		optionSelected(2);
-		l_example.setVisible(true);
-		l_example.setText("Search something specific.");
+		//l_example.setVisible(true);
+		//l_example.setText("Search something specific.");
 	}
 	
 	@FXML private void searchButton(ActionEvent event) throws IOException, ParseException{
@@ -266,7 +266,16 @@ public class SearchUIController {
 	
 	//go back to the listview of documents
 	@FXML private void showedDocBackButton(ActionEvent event) throws IOException, ParseException {
-		showDocVisible(false);
+		if(lv_showedDocs.isVisible()) {
+			Parent page = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
+			Scene scene = new Scene(page);
+			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(scene);
+			stage.show();
+		}else {
+			showDocVisible(false);
+		}
+		
 	}
 
 	public void showDocuments(DocumentFromSearch document, String searchQuery,String fieldtype){
@@ -289,7 +298,6 @@ public class SearchUIController {
 		t_people.setVisible(bl);
 		t_places.setVisible(bl);
 		t_contents.setVisible(bl);
-		b_showedDocBackButton.setVisible(bl);
 	}
 	
 	public void showDetailedDocument(DocumentFromSearch document) {
@@ -343,7 +351,7 @@ public class SearchUIController {
 	
 	private Hyperlink makeHyperLink(String title, DocumentFromSearch document, String searchQuery) {
 		Hyperlink link = new Hyperlink();
-		link.setStyle("-fx-font-size: 16");
+		link.setStyle("-fx-font-size: 16; -fx-text-fill: #362222; -fx-font-weight: bold;");
 		link.setText(title);
 		link.setOnAction((e)->{
 			showDetailedDocument(document);
