@@ -15,6 +15,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -61,7 +62,7 @@ public class Indexer extends PreProcessoring{
 		writer.addDocument(getDocument(file));
 	}
 	
-	public void createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo,Text text) throws IOException {
+	public void createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
 		String previous = indexingInfo.getText();
 		File[] indexfiles = new File(LuceneConstants.INDEX_DIR).listFiles();
 		File[] files = new File(dataDirPath).listFiles();
@@ -69,16 +70,20 @@ public class Indexer extends PreProcessoring{
 			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
 					for(String str:articles) {
 						if(file.getName().contains(str)) {	
-							String hits="0";
+							TopDocs hits=null;
 							if(indexfiles.length!=1) {
 								Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
 								 hits = searcher.getHits(str);
+							}else {
+								indexFile(file,indexingInfo);
+								continue;
 							}
-							if(hits.contains("1")) {
+							if(hits.totalHits.toString().contains("1")) {
 								previous = indexingInfo.getText();
 								indexingInfo.setText(previous+"The file: "+str+" already exist."+"\n");
-							}else
+							}else {
 								indexFile(file,indexingInfo);
+							}
 							articles.remove(str);
 							break;
 				        }

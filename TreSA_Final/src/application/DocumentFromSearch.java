@@ -36,23 +36,21 @@ public class DocumentFromSearch {
 			if(line.contains("<TITLE>")) {
 				line=line.replace("<TITLE>","");
 				line=line.replace("</TITLE>","");
-//				if(isBooleanModel) {
-//					for(int i=0;i<splittedQuery.length;i++) {
-//						if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
-//							System.out.println(line+"hhh"+splittedQuery[i]);
-//							appearance.add(line);
-//							appearanceType.add(LuceneConstants.TITLE);
-//						}
-//					}
-//				}else {
+				if(isBooleanModel) {
+					for(int i=0;i<splittedQuery.length;i++) {
+						if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
+							appearance.add(line);
+							appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.TITLE);
+						}
+					}
+				}else {
 					if(line.toLowerCase().contains(query.toLowerCase())) {
-						System.out.println("appearanceTITLE:"+line+" "+query);
 						appearance.add(line);
-						appearanceType.add(LuceneConstants.TITLE);
+						appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.TITLE);
 						System.out.println(appearance.size()+"index "+appearance.get(0));
 						System.out.println(appearanceType.size()+"index "+appearanceType.get(0));
 					}		
-		//		}
+				}
 				//we save the title without the HTML 
 				title = title.concat(line);
 			}else if(line.contains("<PLACES>")) {
@@ -62,22 +60,20 @@ public class DocumentFromSearch {
 					place = place.concat("Unknown");
 				else {
 					place = place.concat(line);
-//					if(isBooleanModel) {
-//						for(int i=0;i<splittedQuery.length;i++) {
-//							if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
-//								System.out.println(line+"hhh"+splittedQuery[i]);
-//								appearance.add(line);
-//								appearanceType.add(LuceneConstants.PLACES);
-//							}
-//						}
-//					}else {
+					if(isBooleanModel) {
+						for(int i=0;i<splittedQuery.length;i++) {
+							if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
+								appearance.add(line);
+								appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.PLACES);
+							}
+						}
+					}else {
 						if(line.toLowerCase().contains(query.toLowerCase())) {
-							System.out.println("appearancePLACES:"+line+" "+query);
 							appearance.add(line);
-							appearanceType.add(LuceneConstants.PLACES);
+							appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.PLACES);
 							
 						}	
-				//	}
+					}
 				}
 			}else if(line.contains("<PEOPLE>")) {
 				line=line.replace("<PEOPLE>","");
@@ -86,22 +82,21 @@ public class DocumentFromSearch {
 					person = person.concat("Unknown");
 				else {
 					person = person.concat(line);
-//					if(isBooleanModel) {
-//						for(int i=0;i<splittedQuery.length;i++) {
-//							
-//							if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
-//								System.out.println(line+"hhh"+splittedQuery[i]);
-//								appearance.add(line);
-//								appearanceType.add(LuceneConstants.PEOPLE);
-//							}
-//						}
-//					}else{
-						if(line.toLowerCase().contains(query.toLowerCase())) {
-							System.out.println("appearancePEOPLE:"+line+" "+query);
-							appearance.add(line);
-							appearanceType.add(LuceneConstants.PEOPLE);
+					if(isBooleanModel) {
+						for(int i=0;i<splittedQuery.length;i++) {
+							
+							if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
+								appearance.add(line);
+								appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.PEOPLE);
+							}
 						}
-				//	}	
+					}else{
+						if(line.toLowerCase().contains(query.toLowerCase())) {
+							appearance.add(line);
+							appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.PEOPLE);
+						}
+					}	
+				
 				}
 			}else if(line.contains("<BODY>")) {
 				line=line.replace("<BODY>","");
@@ -110,7 +105,6 @@ public class DocumentFromSearch {
 					//if we have for example vegan && vegeterian then we must search both words, we don't know which word exist in the specific doc
 					for(int i=0;i<splittedQuery.length;i++) {
 						if(line.toLowerCase().contains(splittedQuery[i].toLowerCase())) {
-							System.out.println("appearanceCONTENTS:"+line+" "+query);
 							appearance.add(line);
 							//body for field search and contents for vector or phrase search
 							appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.BODY);
@@ -118,7 +112,6 @@ public class DocumentFromSearch {
 					}
 				}else {
 					if(line.toLowerCase().contains(query.toLowerCase())) {
-						System.out.println("appearanceCONETNTS:"+line+" "+query);
 						appearance.add(line);
 						appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.BODY);
 					}

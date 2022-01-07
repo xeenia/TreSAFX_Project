@@ -42,7 +42,7 @@ public class MainUIController {
 			//make the phrases search editable 
 			controller.optionSelected(1);
 			//we transfer the query in the other scene to show it
-			controller.transferQuery(tf_search.getText());
+			controller.transferQuery(tf_search.getText().toLowerCase());
 			Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			searchStage.setScene(searchScene);
 			searchStage.show();

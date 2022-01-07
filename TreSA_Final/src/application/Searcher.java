@@ -52,8 +52,6 @@ public class Searcher {
 			case 1:
 				QueryParser queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 				query = queryParser.parse(searchQuery);
-				
-				System.out.println("query: "+ query.toString());
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 			case 2:
 				BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
@@ -110,7 +108,6 @@ public class Searcher {
 //				}
 				QueryParser parser = new QueryParser(fieldType, new StandardAnalyzer());
 				Query query2 = parser.parse(searchQuery);
-				System.out.println("query:"+query2);
 				return indexSearcher.search(query2, LuceneConstants.MAX_SEARCH);
 			case 5:
 				if (checkExistanceOfFile(searchQuery)){
@@ -131,13 +128,13 @@ public class Searcher {
 		return null;
 	}
 	
-	public String getHits(String filename) throws IOException {
+	public TopDocs getHits(String filename) throws IOException {
 		PhraseQuery.Builder fieldQuery = new PhraseQuery.Builder();
 		String path = LuceneConstants.DATA_DIR+filename;
 		fieldQuery.add(new Term(LuceneConstants.FILE_PATH,path));
 		TopDocs hits = indexSearcher.search(fieldQuery.build(), LuceneConstants.MAX_SEARCH);
-		
-		return hits.scoreDocs.toString();
+	//	return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
+		return hits;
 	}
 	
 	public TopDocs searchByField(String fieldType, String query) throws IOException {

@@ -1,5 +1,5 @@
-<PLACES>el-salvadorusauruguay</PLACES>
-<PEOPLE>Mery</PEOPLE>
+<PLACES></PLACES>
+<PEOPLE>Mary</PEOPLE>
 <TITLE>BAHIA COCOA REVIEW</TITLE>
 <BODY>Showers continued throughout the week in
 the Bahia cocoa zone, alleviating the drought since early
@@ -57,4 +57,4 @@ crop.
 be published by the Brazilian Cocoa Trade Commission after
 carnival which ends midday on February 27.
  Reuter
-</BODY>
+</BODY>

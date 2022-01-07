@@ -1,7 +1,7 @@
-<PLACES>argentina</PLACES>
+<PLACES></PLACES>
 <PEOPLE></PEOPLE>
 <TITLE>ARGENTINE 1986/87 GRAIN/OILSEED REGISTRATIONS</TITLE>
-<BODY>Argentine grain board figures show
+<BODY> grain board figures show
 crop registrations of grains, oilseeds and their products to
 February 11, in thousands of tonnes, showing those for futurE
 shipments month, 1986/87 total and 1985/86 total to February
@@ -31,4 +31,4 @@ Jun 10.0, total 182.4 (117.6).
 (76.1).                         
     Soybean oil prev 3.7, Feb 21.1, Mar nil, Apr 2.0, May 9.0,
 Jun 13.0, Jul 7.0, total 55.8 (33.7).        REUTER
-</BODY>
+</BODY>

@@ -1,6 +1,10 @@
 package application;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +14,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -20,9 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -32,12 +37,25 @@ public class SettingsController {
 	@FXML private Button b_back;
 	@FXML private Button b_addingDocs;
 	@FXML private Button b_deletingDocs;	
-	@FXML private Text t_add;
-	@FXML private Text t_delete;
-	@FXML private Text t_indexInfo;
 	@FXML private TextArea ta_documents;
+	@FXML private TextArea ta_status;
 	@FXML private TextArea ta_docsInIndexer;
+	
+	@FXML private TextArea ta_content;
+	@FXML private TextField tf_editFile;
+	@FXML private TextField tf_title;
+	@FXML private TextField tf_place;
+	@FXML private TextField tf_people;
+	@FXML private Button b_editFile;
+	@FXML private Button b_clear;
+	@FXML private Button b_save;
+	@FXML private Button b_cancel;
 
+	@FXML private Label l_title;
+	@FXML private Label l_people;
+	@FXML private Label l_place;
+	@FXML private Label l_content;
+	
 	static String indexDir = LuceneConstants.INDEX_DIR;
 	static String dataDir = LuceneConstants.DATA_DIR;
 	Indexer indexer;
@@ -60,19 +78,24 @@ public class SettingsController {
 			searchStage.show();
 		}
 		//we are taking the documents and send them to Indexer
-		@FXML private void addingDocsButton(MouseEvent event) throws IOException {
-			ArrayList<String> documents = takeTheDocs(tf_addingDocs, t_add);
+		@FXML private void addingDocsButton(ActionEvent event) throws IOException {
+			ta_status.setText("");
+			ArrayList<String> documents = takeTheDocs(tf_addingDocs );
+			
 			if(!documents.isEmpty())
 				createIndex(documents);	
 		}
 		//we are taking the documents and delete them from Indexer
-		@FXML private void deletingDocsButton(MouseEvent event) throws IOException {
-			ArrayList<String> documents = takeTheDocs(tf_deletingDocs,t_delete);
+		@FXML private void deletingDocsButton(ActionEvent event) throws IOException {
+			ArrayList<String> documents = takeTheDocs(tf_deletingDocs);
 			if(!documents.isEmpty()) {
 				deleteSpecificDocs(documents);
 			}
 		}
 
+		public void taDocsInIndexer() {
+			
+		}
 		private boolean checkTheFileName(String article) {
 			String[] splitted = article.split(" ");
 			for(String fileName : splitted) {
@@ -81,6 +104,7 @@ public class SettingsController {
 					num = num.replace(".txt", "");
 				    try {
 				        int isNumber = Integer.parseInt(num);
+				        if(isNumber<0) return false;
 				    } catch (NumberFormatException nfe) {
 				        return false;
 				    }
@@ -92,19 +116,17 @@ public class SettingsController {
 			return true;
 		}
 
-		private ArrayList<String> takeTheDocs(TextField textField, Text errorText) {
+		private ArrayList<String> takeTheDocs(TextField textField) {
 			String documentsFromTF = textField.getText();
 			ArrayList<String> documents = new ArrayList<String>();
 			String[] splitted = documentsFromTF.split(" ");
 			for(String str : splitted) {
 				if(checkTheFileName(str)) {
 					documents.add(str);
-					if(errorText.isVisible()) {
-						errorText.setVisible(false);
-					}
 				}else {
-					errorText.setText("Incorrect file name: "+ str);
-					errorText.setVisible(true);
+					String str1 = ta_status.getText();
+					if(str1.isEmpty()) ta_status.setText("Incorrect file name2: "+ str);
+					else ta_status.setText(str1+"\n"+"Incorrect file name2: "+ str);
 				}
 			}
 			textField.setText("");
@@ -114,14 +136,10 @@ public class SettingsController {
 		private void createIndex(ArrayList<String> articles) throws IOException {
 			indexer = new Indexer(indexDir);
 			long startTime = System.currentTimeMillis();
-			ta_docsInIndexer.setText("");
-			indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_docsInIndexer,t_indexInfo);
+			indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_status);
 			long endTime = System.currentTimeMillis();		
 			indexer.close();
 			//t_indexInfo.setText(numIndexed + " File(s) indexed, time taken: " + (endTime-startTime)+" ms");
-			if(!t_indexInfo.isVisible()) {
-				t_indexInfo.setVisible(true);
-			}
 		}
 
 		public void deleteSpecificDocs(ArrayList<String> documents) throws IOException {
@@ -133,11 +151,118 @@ public class SettingsController {
 				writer.deleteDocuments(new Term(LuceneConstants.FILE_NAME,article));
 				writer.commit();
 			}
-			t_indexInfo.setText("index contains deleted files: "+writer.hasDeletions());
-			if(!t_indexInfo.isVisible()) {
-				t_indexInfo.setVisible(true);
-			}
+			ta_status.setText("index contains deleted files: "+writer.hasDeletions());
 			writer.close();
+		}
+		
+		@FXML void editSpecificDoc(ActionEvent event) throws IOException {
+			ta_status.setText("");
+			Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+			String file = tf_editFile.getText();
+			Boolean flag=false;
+			String[] fileName = file.split(" ");
+			if(checkTheFileName((fileName.length>1)?"fdsfds":file)) {
+				setDisability(false);
+				TopDocs hits = searcher.getHits(file);
+				if(hits.totalHits.toString().contains("1")) {				
+					ta_status.setText("The file "+file+" exist in Indexer. The changes will appear \nalso when you will search the specific document.");
+				}
+					File filename = new File(LuceneConstants.DATA_DIR+file);
+					BufferedReader reader = new BufferedReader(new FileReader(filename));
+					String line=null;
+					while((line = reader.readLine()) != null) {
+						if(line.contains("<TITLE>")) {
+							line = line.replace("<TITLE>", "");
+							line = line.replace("</TITLE>", "");
+							tf_title.setText(line);
+						}
+						if(line.contains("<PEOPLE>")) {
+							line = line.replace("<PEOPLE>", "");
+							line = line.replace("</PEOPLE>", "");
+							tf_people.setText(line);
+						}
+						if(line.contains("<PLACES>")) {
+							line = line.replace("<PLACES>", "");
+							line = line.replace("</PLACES>", "");
+							tf_place.setText(line);
+						}
+						if(line.contains("<BODY>")||flag) {
+							flag=true;
+							line = line.replace("<BODY>", "");
+							line = line.replace("</BODY>", "");
+							String str = ta_content.getText();
+							if(str.isEmpty())
+								ta_content.setText(str+line);
+							else {
+								ta_content.setText(str+"\n"+line);
+							}
+						}
+					}
+					reader.close();
+			}else {
+				String str1 = ta_status.getText();
+				if(fileName.length>1) {
+					if(str1.isEmpty()) ta_status.setText("You need to write 1 file: "+ file);
+					else ta_status.setText(str1+"\n"+"You need to write 1 file: "+ file);
+				}else {
+					if(str1.isEmpty()) ta_status.setText("Incorect file name: "+ file);
+					else ta_status.setText(str1+"\n"+"Incorrect file name: "+ file);
+				}
+				
+			}
+			
+		}
+		private void clear() {
+			tf_title.setText("");
+			tf_people.setText("");
+			tf_place.setText("");
+			ta_content.setText("");
+		}
+		@FXML private void cancelButton(ActionEvent event) {
+			setDisability(true);
+			ta_status.setText("");
+			clear();
+		}
+		@FXML private void saveButton(ActionEvent event) throws IOException {
+			if(tf_title.getText().isEmpty()||ta_content.getText().isEmpty()) {
+				ta_status.setText("You must write something in both Title field and Content Field.");
+			}else {
+				File file = new File(LuceneConstants.DATA_DIR+tf_editFile.getText());
+				ArrayList<String> arr = new ArrayList();
+				Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+				TopDocs hits = searcher.getHits(tf_editFile.getText());
+				if(hits.totalHits.toString().contains("1")) {
+					arr.add(tf_editFile.getText());
+					deleteSpecificDocs(arr);
+				}
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				writer.write("<PLACES>"+tf_place.getText()+"</PLACES>"+"\n");
+				writer.write("<PEOPLE>"+tf_people.getText()+"</PEOPLE>"+"\n");
+				writer.write("<TITLE>"+tf_title.getText()+"</TITLE>"+"\n");
+				writer.write("<BODY>"+ta_content.getText());
+				writer.write("</BODY>");
+				writer.close();
+				clear();
+				tf_editFile.setText("");
+				if(hits.totalHits.toString().contains("1")) createIndex(arr);
+				
+				
+			}
+		}
+		private void setDisability(boolean bl) {
+			tf_title.setDisable(bl);
+			tf_people.setDisable(bl);
+			tf_place.setDisable(bl);
+			ta_content.setDisable(bl);
+			b_save.setDisable(bl);
+			l_title.setDisable(bl);
+			l_people.setDisable(bl);
+			l_place.setDisable(bl);
+			l_content.setDisable(bl);
+			b_cancel.setDisable(bl);
+		}
+		@FXML private void clearButton(ActionEvent event) {
+			clear();
 		}
 	
 }

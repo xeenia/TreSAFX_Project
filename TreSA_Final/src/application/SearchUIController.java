@@ -163,7 +163,7 @@ public class SearchUIController {
 				l_errorMessage.setText("You must search something.");
 			}
 		}else if(tb_vector.isSelected()) {
-			String str = tf_search.getText();
+			String str = tf_search.getText().toLowerCase();
 			if(!str.isBlank()) {
 				l_errorMessage.setVisible(false);
 				//search query
@@ -200,7 +200,7 @@ public class SearchUIController {
 				l_errorMessage.setText("You must search atleast one field.");
 			}
 		}else if(tb_boolean.isSelected()) {
-			String isBlank = tx_booleanModel.getText();
+			String isBlank = tx_booleanModel.getText().toLowerCase();
 			if(isBlank.length()!=0) {
 				l_errorMessage.setVisible(false);
 				search(isBlank,LuceneConstants.CONTENTS,2);
