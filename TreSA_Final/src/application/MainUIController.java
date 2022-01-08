@@ -39,19 +39,21 @@ public class MainUIController {
 			Parent searchPage = loader.load();
 			Scene searchScene = new Scene(searchPage);
 			SearchUIController controller = loader.getController();	
-			//make the phrases search editable 
+			// Making phrases search editable 
 			controller.optionSelected(1);
-			//we transfer the query in the other scene to show it
+			
+			// Transfer the query in the other scene to display it
 			controller.transferQuery(tf_search.getText().toLowerCase());
 			Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			searchStage.setScene(searchScene);
 			searchStage.show();
 		}else {
 			advanceVisible(false);
-			//error message shows up
+			// Error message shows up
 			errorLabel.setVisible(true);
 		}
 	}
+	
 	@FXML private void settingsHyperlink(MouseEvent event) throws IOException {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("Settings.fxml"));
@@ -64,6 +66,7 @@ public class MainUIController {
 			settingStage.setScene(settingScene);
 			settingStage.show();
 	}
+	
 	private void advanceVisible(Boolean bl) {
 		rb_byFields.setSelected(true);
 		rb_byFields.setVisible(bl);
@@ -77,31 +80,32 @@ public class MainUIController {
 		advanceVisible(b_go.isVisible()?false:true);
 	}
 	
-	//the "Go" button appearances when the advance button is selected
-		@FXML public void goButton(ActionEvent event) throws IOException, ParseException {
-			FXMLLoader loader = new FXMLLoader();
-			Parent searchPage;
-			loader.setLocation(getClass().getResource("SearchDocumentsUI.fxml"));
-			searchPage = loader.load();
-			SearchUIController controller = loader.getController();
-			if(rb_byFields.isSelected()) {
-				//field search editable
-				controller.optionSelected(2);	
-				//setting selection for the current toggle button
-				controller.tb_field.setSelected(true);
-			}else if(rb_boolean.isSelected()) {
-				//boolean search editable
-				controller.optionSelected(3);
-				controller.tb_boolean.setSelected(true);
-			}else {
-				//vector search editable
-				controller.optionSelected(1);
-				controller.tb_vector.setSelected(true);
-				controller.transferQuery(tf_search.getText());	
-			}	
-			Scene searchScene = new Scene(searchPage);
-			Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			searchStage.setScene(searchScene);
-			searchStage.show();
-		}
+	// "Go" button shows up, when the "Advance" button is selected
+	@FXML public void goButton(ActionEvent event) throws IOException, ParseException {
+		FXMLLoader loader = new FXMLLoader();
+		Parent searchPage;
+		loader.setLocation(getClass().getResource("SearchDocumentsUI.fxml"));
+		searchPage = loader.load();
+		SearchUIController controller = loader.getController();
+		if(rb_byFields.isSelected()) {
+			// "Field search" editable
+			controller.optionSelected(2);	
+			// Setting selection for the current toggle button
+			controller.tb_field.setSelected(true);
+		}else if(rb_boolean.isSelected()) {
+			// "Boolean search" editable
+			controller.optionSelected(3);
+			controller.tb_boolean.setSelected(true);
+		}else {
+			// "Vector search" editable
+			controller.optionSelected(1);
+			controller.tb_vector.setSelected(true);
+			controller.transferQuery(tf_search.getText());	
+		}	
+		Scene searchScene = new Scene(searchPage);
+		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		searchStage.setScene(searchScene);
+		searchStage.show();
+	}
+	
 }

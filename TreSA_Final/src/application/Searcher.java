@@ -101,27 +101,19 @@ public class Searcher {
 				}
 				return indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
 			case 4:
-//				PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
-//				List<String> arraySearchQueryPhrase1 = stringToArrayList(input);
-//				for(String s:arraySearchQueryPhrase1) {
-//					fieldquery.add(new Term(fieldType,s));
-//				}
 				QueryParser parser = new QueryParser(fieldType, new StandardAnalyzer());
 				Query query2 = parser.parse(searchQuery);
 				return indexSearcher.search(query2, LuceneConstants.MAX_SEARCH);
 			case 5:
 				if (checkExistanceOfFile(searchQuery)){
 					queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
-					// SearchQuery should become LuceneConstants.CONTENTS of the file we searched
+					// Idea: "searchQuery" variable should become LuceneConstants.CONTENTS of the file we searched
 					// (file name is inside searchQuery variable)
 
 					// Take LuceneConstants.CONTENTS of [filename].txt from Index
 					String documentContents = documentContext(searchQuery);
 					query = queryParser.parse(documentContents);
 					return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
-				}
-				else{
-					Scripts.Script(22);
 				}
 		}
 		

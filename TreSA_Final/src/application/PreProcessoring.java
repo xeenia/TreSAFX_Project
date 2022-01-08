@@ -22,7 +22,7 @@ public class PreProcessoring{
 		String ls = System.getProperty("line.separator");
 		int i = 0;
 		while ((line = reader.readLine()) != null) {
-			if(i>=3) { // taking text from <BODY></BODY>
+			if(i>=3) { // Taking text from <BODY></BODY>
 				bodyBuilder.append(line);
 				bodyBuilder.append(ls);
 			}

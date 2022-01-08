@@ -13,8 +13,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			//go to main scene
-			//everything that happens in main scene are in MainUIController.java class
+			// Everything that happens in main scene are in MainUIController.java class
 			Parent root = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);

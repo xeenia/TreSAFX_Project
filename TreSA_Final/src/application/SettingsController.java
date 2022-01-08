@@ -60,209 +60,211 @@ public class SettingsController {
 	static String dataDir = LuceneConstants.DATA_DIR;
 	Indexer indexer;
 	IndexWriter writer;
-	//showing the file names in text area that exist in Data folder
-		public void showFiles() {
-			File[] files = new File(LuceneConstants.DATA_DIR).listFiles();
-			String fileNames="";
-			for (File file : files) 	{
-			    fileNames = fileNames.concat(file.getName()+"\n");
-				ta_documents.setText(fileNames);
-			}
+	// Showing the file names in text area that exist in Data folder
+	public void showFiles() {
+		File[] files = new File(LuceneConstants.DATA_DIR).listFiles();
+		String fileNames="";
+		for (File file : files) 	{
+		    fileNames = fileNames.concat(file.getName()+"\n");
+			ta_documents.setText(fileNames);
 		}
-		//going back to main UI when the back button its clicked
-		@FXML private void backButton(ActionEvent event) throws IOException {
-			Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
-			Scene searchScene = new Scene(searchPage);
-			Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			searchStage.setScene(searchScene);
-			searchStage.show();
-		}
-		//we are taking the documents and send them to Indexer
-		@FXML private void addingDocsButton(ActionEvent event) throws IOException {
-			ta_status.setText("");
-			ArrayList<String> documents = takeTheDocs(tf_addingDocs );
-			
-			if(!documents.isEmpty())
-				createIndex(documents);	
-		}
-		//we are taking the documents and delete them from Indexer
-		@FXML private void deletingDocsButton(ActionEvent event) throws IOException {
-			ArrayList<String> documents = takeTheDocs(tf_deletingDocs);
-			if(!documents.isEmpty()) {
-				deleteSpecificDocs(documents);
-			}
-		}
-
-		public void taDocsInIndexer() {
-			
-		}
-		private boolean checkTheFileName(String article) {
-			String[] splitted = article.split(" ");
-			for(String fileName : splitted) {
-				if(fileName.startsWith("Article")&&fileName.endsWith(".txt")) {
-					String num = fileName.replace("Article", "");
-					num = num.replace(".txt", "");
-				    try {
-				        int isNumber = Integer.parseInt(num);
-				        if(isNumber<0) return false;
-				    } catch (NumberFormatException nfe) {
-				        return false;
-				    }
-				    return true;
-				}else {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		private ArrayList<String> takeTheDocs(TextField textField) {
-			String documentsFromTF = textField.getText();
-			ArrayList<String> documents = new ArrayList<String>();
-			String[] splitted = documentsFromTF.split(" ");
-			for(String str : splitted) {
-				if(checkTheFileName(str)) {
-					documents.add(str);
-				}else {
-					String str1 = ta_status.getText();
-					if(str1.isEmpty()) ta_status.setText("Incorrect file name2: "+ str);
-					else ta_status.setText(str1+"\n"+"Incorrect file name2: "+ str);
-				}
-			}
-			textField.setText("");
-			return documents;
-		}
-
-		private void createIndex(ArrayList<String> articles) throws IOException {
-			indexer = new Indexer(indexDir);
-			long startTime = System.currentTimeMillis();
-			indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_status);
-			long endTime = System.currentTimeMillis();		
-			indexer.close();
-			//t_indexInfo.setText(numIndexed + " File(s) indexed, time taken: " + (endTime-startTime)+" ms");
-		}
-
-		public void deleteSpecificDocs(ArrayList<String> documents) throws IOException {
-			Path path = Paths.get(LuceneConstants.INDEX_DIR);
-	     	Directory directory = FSDirectory.open(path);
-	     	IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
-			writer = new IndexWriter(directory,config);
-			for(String article : documents){
-				writer.deleteDocuments(new Term(LuceneConstants.FILE_NAME,article));
-				writer.commit();
-			}
-			ta_status.setText("index contains deleted files: "+writer.hasDeletions());
-			writer.close();
-		}
+	}
+	
+	// Going back to main UI when the back button its clicked
+	@FXML private void backButton(ActionEvent event) throws IOException {
+		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
+		Scene searchScene = new Scene(searchPage);
+		Stage searchStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		searchStage.setScene(searchScene);
+		searchStage.show();
+	}
+	
+	// Taking the documents and send them to Indexer
+	@FXML private void addingDocsButton(ActionEvent event) throws IOException {
+		ta_status.setText("");
+		ArrayList<String> documents = takeTheDocs(tf_addingDocs );
 		
-		@FXML void editSpecificDoc(ActionEvent event) throws IOException {
-			ta_status.setText("");
-			Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
-			String file = tf_editFile.getText();
-			Boolean flag=false;
-			String[] fileName = file.split(" ");
-			if(checkTheFileName((fileName.length>1)?"fdsfds":file)) {
-				setDisability(false);
-				TopDocs hits = searcher.getHits(file);
-				if(hits.totalHits.toString().contains("1")) {				
-					ta_status.setText("The file "+file+" exist in Indexer. The changes will appear \nalso when you will search the specific document.");
-				}
-					File filename = new File(LuceneConstants.DATA_DIR+file);
-					BufferedReader reader = new BufferedReader(new FileReader(filename));
-					String line=null;
-					while((line = reader.readLine()) != null) {
-						if(line.contains("<TITLE>")) {
-							line = line.replace("<TITLE>", "");
-							line = line.replace("</TITLE>", "");
-							tf_title.setText(line);
-						}
-						if(line.contains("<PEOPLE>")) {
-							line = line.replace("<PEOPLE>", "");
-							line = line.replace("</PEOPLE>", "");
-							tf_people.setText(line);
-						}
-						if(line.contains("<PLACES>")) {
-							line = line.replace("<PLACES>", "");
-							line = line.replace("</PLACES>", "");
-							tf_place.setText(line);
-						}
-						if(line.contains("<BODY>")||flag) {
-							flag=true;
-							line = line.replace("<BODY>", "");
-							line = line.replace("</BODY>", "");
-							String str = ta_content.getText();
-							if(str.isEmpty())
-								ta_content.setText(str+line);
-							else {
-								ta_content.setText(str+"\n"+line);
-							}
-						}
-					}
-					reader.close();
+		if(!documents.isEmpty())
+			createIndex(documents);	
+	}
+	
+	// Taking the documents and delete them from Indexer
+	@FXML private void deletingDocsButton(ActionEvent event) throws IOException {
+		ArrayList<String> documents = takeTheDocs(tf_deletingDocs);
+		if(!documents.isEmpty()) {
+			deleteSpecificDocs(documents);
+		}
+	}
+
+	private boolean checkTheFileName(String article) {
+		String[] splitted = article.split(" ");
+		for(String fileName : splitted) {
+			if(fileName.startsWith("Article")&&fileName.endsWith(".txt")) {
+				String num = fileName.replace("Article", "");
+				num = num.replace(".txt", "");
+			    try {
+			        int isNumber = Integer.parseInt(num);
+			        if(isNumber<0) return false;
+			    } catch (NumberFormatException nfe) {
+			        return false;
+			    }
+			    return true;
+			}else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private ArrayList<String> takeTheDocs(TextField textField) {
+		String documentsFromTF = textField.getText();
+		ArrayList<String> documents = new ArrayList<String>();
+		String[] splitted = documentsFromTF.split(" ");
+		for(String str : splitted) {
+			if(checkTheFileName(str)) {
+				documents.add(str);
 			}else {
 				String str1 = ta_status.getText();
-				if(fileName.length>1) {
-					if(str1.isEmpty()) ta_status.setText("You need to write 1 file: "+ file);
-					else ta_status.setText(str1+"\n"+"You need to write 1 file: "+ file);
-				}else {
-					if(str1.isEmpty()) ta_status.setText("Incorect file name: "+ file);
-					else ta_status.setText(str1+"\n"+"Incorrect file name: "+ file);
+				if(str1.isEmpty()) ta_status.setText("Incorrect file name2: "+ str);
+				else ta_status.setText(str1+"\n"+"Incorrect file name2: "+ str);
+			}
+		}
+		textField.setText("");
+		return documents;
+	}
+
+	private void createIndex(ArrayList<String> articles) throws IOException {
+		indexer = new Indexer(indexDir);
+		indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_status);	
+		indexer.close();
+	}
+
+	public void deleteSpecificDocs(ArrayList<String> documents) throws IOException {
+		Path path = Paths.get(LuceneConstants.INDEX_DIR);
+     	Directory directory = FSDirectory.open(path);
+     	IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
+		writer = new IndexWriter(directory,config);
+		for(String article : documents){
+			writer.deleteDocuments(new Term(LuceneConstants.FILE_NAME,article));
+			writer.commit();
+		}
+		ta_status.setText("index contains deleted files: "+writer.hasDeletions());
+		writer.close();
+	}
+	
+	@FXML void editSpecificDoc(ActionEvent event) throws IOException {
+		ta_status.setText("");
+		Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+		String file = tf_editFile.getText();
+		Boolean flag=false;
+		String[] fileName = file.split(" ");
+		if(checkTheFileName((fileName.length>1)?"fdsfds":file)) {
+			setDisability(false);
+			TopDocs hits = searcher.getHits(file);
+			if(hits.totalHits.toString().contains("1")) {				
+				ta_status.setText("The file "+file+" exist in Indexer. The changes will appear \nalso when you will search the specific document.");
+			}
+				File filename = new File(LuceneConstants.DATA_DIR+file);
+				BufferedReader reader = new BufferedReader(new FileReader(filename));
+				String line=null;
+				while((line = reader.readLine()) != null) {
+					if(line.contains("<TITLE>")) {
+						line = line.replace("<TITLE>", "");
+						line = line.replace("</TITLE>", "");
+						tf_title.setText(line);
+					}
+					if(line.contains("<PEOPLE>")) {
+						line = line.replace("<PEOPLE>", "");
+						line = line.replace("</PEOPLE>", "");
+						tf_people.setText(line);
+					}
+					if(line.contains("<PLACES>")) {
+						line = line.replace("<PLACES>", "");
+						line = line.replace("</PLACES>", "");
+						tf_place.setText(line);
+					}
+					if(line.contains("<BODY>")||flag) {
+						flag=true;
+						line = line.replace("<BODY>", "");
+						line = line.replace("</BODY>", "");
+						String str = ta_content.getText();
+						if(str.isEmpty())
+							ta_content.setText(str+line);
+						else {
+							ta_content.setText(str+"\n"+line);
+						}
+					}
 				}
-				
+				reader.close();
+		}else {
+			String str1 = ta_status.getText();
+			if(fileName.length>1) {
+				if(str1.isEmpty()) ta_status.setText("You need to write 1 file: "+ file);
+				else ta_status.setText(str1+"\n"+"You need to write 1 file: "+ file);
+			}else {
+				if(str1.isEmpty()) ta_status.setText("Incorect file name: "+ file);
+				else ta_status.setText(str1+"\n"+"Incorrect file name: "+ file);
 			}
 			
 		}
-		private void clear() {
-			tf_title.setText("");
-			tf_people.setText("");
-			tf_place.setText("");
-			ta_content.setText("");
-		}
-		@FXML private void cancelButton(ActionEvent event) {
-			setDisability(true);
-			ta_status.setText("");
-			clear();
-		}
-		@FXML private void saveButton(ActionEvent event) throws IOException {
-			if(tf_title.getText().isEmpty()||ta_content.getText().isEmpty()) {
-				ta_status.setText("You must write something in both Title field and Content Field.");
-			}else {
-				File file = new File(LuceneConstants.DATA_DIR+tf_editFile.getText());
-				ArrayList<String> arr = new ArrayList();
-				Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
-				TopDocs hits = searcher.getHits(tf_editFile.getText());
-				if(hits.totalHits.toString().contains("1")) {
-					arr.add(tf_editFile.getText());
-					deleteSpecificDocs(arr);
-				}
-				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-				writer.write("<PLACES>"+tf_place.getText()+"</PLACES>"+"\n");
-				writer.write("<PEOPLE>"+tf_people.getText()+"</PEOPLE>"+"\n");
-				writer.write("<TITLE>"+tf_title.getText()+"</TITLE>"+"\n");
-				writer.write("<BODY>"+ta_content.getText());
-				writer.write("</BODY>");
-				writer.close();
-				clear();
-				tf_editFile.setText("");
-				if(hits.totalHits.toString().contains("1")) createIndex(arr);
-				
-				
-			}
-		}
-		private void setDisability(boolean bl) {
-			tf_title.setDisable(bl);
-			tf_people.setDisable(bl);
-			tf_place.setDisable(bl);
-			ta_content.setDisable(bl);
-			b_save.setDisable(bl);
-			l_title.setDisable(bl);
-			l_people.setDisable(bl);
-			l_place.setDisable(bl);
-			l_content.setDisable(bl);
-			b_cancel.setDisable(bl);
-		}
-		@FXML private void clearButton(ActionEvent event) {
-			clear();
-		}
+		
+	}
 	
+	private void clear() {
+		tf_title.setText("");
+		tf_people.setText("");
+		tf_place.setText("");
+		ta_content.setText("");
+	}
+	
+	@FXML private void cancelButton(ActionEvent event) {
+		setDisability(true);
+		ta_status.setText("");
+		clear();
+	}
+	
+	@FXML private void saveButton(ActionEvent event) throws IOException {
+		if(tf_title.getText().isEmpty()||ta_content.getText().isEmpty()) {
+			ta_status.setText("You must write something in both Title field and Content Field.");
+		}else {
+			File file = new File(LuceneConstants.DATA_DIR+tf_editFile.getText());
+			ArrayList<String> arr = new ArrayList();
+			Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+			TopDocs hits = searcher.getHits(tf_editFile.getText());
+			if(hits.totalHits.toString().contains("1")) {
+				arr.add(tf_editFile.getText());
+				deleteSpecificDocs(arr);
+			}
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write("<PLACES>"+tf_place.getText()+"</PLACES>"+"\n");
+			writer.write("<PEOPLE>"+tf_people.getText()+"</PEOPLE>"+"\n");
+			writer.write("<TITLE>"+tf_title.getText()+"</TITLE>"+"\n");
+			writer.write("<BODY>"+ta_content.getText());
+			writer.write("</BODY>");
+			writer.close();
+			clear();
+			tf_editFile.setText("");
+			if(hits.totalHits.toString().contains("1")) createIndex(arr);
+			
+			
+		}
+	}
+	
+	private void setDisability(boolean bl) {
+		tf_title.setDisable(bl);
+		tf_people.setDisable(bl);
+		tf_place.setDisable(bl);
+		ta_content.setDisable(bl);
+		b_save.setDisable(bl);
+		l_title.setDisable(bl);
+		l_people.setDisable(bl);
+		l_place.setDisable(bl);
+		l_content.setDisable(bl);
+		b_cancel.setDisable(bl);
+	}
+	
+	@FXML private void clearButton(ActionEvent event) {
+		clear();
+	}
+
 }
