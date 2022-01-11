@@ -34,7 +34,7 @@
             <Font name="Century Schoolbook" size="120.0" />
          </font>
       </Label>
-      <Label fx:id="errorLabel" layoutX="373.0" layoutY="405.0" text="You have to search something." textFill="WHITE" visible="false">
+      <Label fx:id="errorLabel" layoutX="300.0" layoutY="405.0" text="You have to search something." textFill="WHITE" visible="false">
          <font>
             <Font name="Century Schoolbook" size="15.0" />
          </font>
@@ -44,13 +44,8 @@
             <Font name="Century Schoolbook" size="15.0" />
          </font>
       </Label>
-      <Hyperlink layoutX="8.0" layoutY="570.0" text="How the search engine works" textFill="WHITE">
-         <font>
-            <Font name="Century Schoolbook" size="15.0" />
-         </font>
-      </Hyperlink>
       <Separator layoutX="-11.0" layoutY="560.0" prefHeight="10.0" prefWidth="967.0" />
-      <Hyperlink fx:id="h_settings" layoutX="222.0" layoutY="570.0" onMouseClicked="#settingsHyperlink" text="Settings" textFill="WHITE">
+      <Hyperlink fx:id="h_settings" layoutX="7.0" layoutY="567.0" onMouseClicked="#settingsHyperlink" text="Settings" textFill="WHITE">
          <font>
             <Font name="Century Schoolbook" size="15.0" />
          </font>

@@ -46,6 +46,12 @@ public class Searcher {
 	Query query;
 	QueryParser queryParser;
 	
+	public int getDocumentsCount() throws IOException {
+		Path indexPath = Paths.get(LuceneConstants.INDEX_DIR);
+		Directory directory = FSDirectory.open(indexPath);
+		IndexReader indexReader = DirectoryReader.open(directory);
+		return indexReader.maxDoc();
+	}
 	public void printDocuments(TextArea ta) throws IOException {
 		String previous = "";
 		Path indexPath = Paths.get(LuceneConstants.INDEX_DIR);
@@ -60,6 +66,7 @@ public class Searcher {
 				ta.setText(previous + doc.get(LuceneConstants.FILE_NAME)+"\n");
 				previous = ta.getText();
 			}
+		
 	}
 	
 	public Searcher(String indexDirectoryPath) throws IOException {

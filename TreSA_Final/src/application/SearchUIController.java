@@ -210,16 +210,16 @@ public class SearchUIController {
 			   !(tf_fieldContents.getText().isBlank())
 			){
 				if(!(tf_fieldTitle.getText().isBlank())) {
-					search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.CONTENTS,4);  //search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.TITLE,4);
+					search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.TITLE,4);  
 				}
 				if(!(tf_fieldPeople.getText().isBlank())) {
-					search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.PEOPLE,4);
+					search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.PEOPLE,4); 
 				}
 				if(!(tf_fieldPlaces.getText().isBlank())) {
-					search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.PLACES,4);
+					search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.PLACES,4); 
 				}
 				if(!(tf_fieldContents.getText().isBlank())) {
-					search(tf_fieldContents.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4);
+					search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4); 
 				}
 			}
 			else {
@@ -332,19 +332,19 @@ public class SearchUIController {
 			case 4:
 				if(!query[0].isBlank()) {
 					tf_fieldTitle.setText(query[0]);
-					search(query[0],LuceneConstants.CONTENTS,4); //search(query[0],LuceneConstants.TITLE,4);
+					search(query[0],LuceneConstants.TITLE,4); 
 				}
 				if(!query[1].isBlank()) {
 					tf_fieldPeople.setText(query[1]);
-					search(query[1], LuceneConstants.CONTENTS,4); //search(query[1], LuceneConstants.PEOPLE,4);
+					search(query[1], LuceneConstants.PEOPLE,4); 
 				}
 				if(!query[2].isBlank()) {
 					tf_fieldPlaces.setText(query[2]);
-					search(query[2], LuceneConstants.CONTENTS,4); //search(query[2], LuceneConstants.PLACES,4);
+					search(query[2], LuceneConstants.PLACES,4);
 				}
 				if(!query[3].isBlank()) {
 					tf_fieldContents.setText(query[3]);
-					search(query[3],LuceneConstants.CONTENTS,4); //search(query[3],LuceneConstants.BODY,4);
+					search(query[3],LuceneConstants.BODY,4); 
 				}
 				break;
 			case 5:

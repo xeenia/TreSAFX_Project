@@ -35,9 +35,9 @@ public class MainUIController {
 		String str = tf_search.getText();
 		errorLabel.setVisible(false);
 		Boolean fields=true,flag=true; 
-		File[] files = new File(LuceneConstants.INDEX_DIR).listFiles();
-		System.out.println(files.length);
-		if(files.length==1||files.length==0) {
+		Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+		int indexerCount = searcher.getDocumentsCount();
+		if(indexerCount==0) {
 			errorLabel.setText("No documents in indexer. Go to settings and import.");
 			errorLabel.setVisible(true);
 		}else {
