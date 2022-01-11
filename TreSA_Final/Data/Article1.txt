@@ -1,5 +1,5 @@
 <PLACES>usa</PLACES>
-<PEOPLE></PEOPLE>
+<PEOPLE>costas mary</PEOPLE>
 <TITLE>STANDARD OIL <SRD> TO FORM FINANCIAL UNIT</TITLE>
 <BODY>Standard Oil Co and BP North America
 Inc said they plan to form a venture to manage the money market
@@ -11,4 +11,4 @@ and will be operated by Standard Oil under the oversight of a
 joint management committee.
 
  Reuter
-</BODY>
+</BODY>

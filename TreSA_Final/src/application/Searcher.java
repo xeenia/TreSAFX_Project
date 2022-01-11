@@ -23,6 +23,10 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Bits;
+
+import javafx.scene.control.TextArea;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
@@ -30,6 +34,7 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MultiBits;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -39,8 +44,24 @@ public class Searcher {
 	Directory indexDirectory;
 	IndexReader indexReader;
 	Query query;
-	
 	QueryParser queryParser;
+	
+	public void printDocuments(TextArea ta) throws IOException {
+		String previous = "";
+		Path indexPath = Paths.get(LuceneConstants.INDEX_DIR);
+		Directory directory = FSDirectory.open(indexPath);
+		IndexReader indexReader = DirectoryReader.open(directory);
+			Bits liveDocs = MultiBits.getLiveDocs(indexReader);
+			for (int i = 0; i < indexReader.maxDoc(); i++) {
+				if (liveDocs != null && !liveDocs.get(i))
+					continue;
+				
+				Document doc = indexReader.document(i);
+				ta.setText(previous + doc.get(LuceneConstants.FILE_NAME)+"\n");
+				previous = ta.getText();
+			}
+	}
+	
 	public Searcher(String indexDirectoryPath) throws IOException {
 		Path indexPath = Paths.get(indexDirectoryPath);
 		indexDirectory = FSDirectory.open(indexPath);
@@ -52,11 +73,11 @@ public class Searcher {
 		String searchQuery = input;
 		
 		switch(choice) {
-			case 1:
+			case 1: //vector
 				queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 				query = queryParser.parse(searchQuery);
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
-			case 2:
+			case 2: //boolean
 				BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
 				List<String> arraySearchQueryBoolean = stringToArrayList(searchQuery);
 				Query query;
@@ -96,18 +117,18 @@ public class Searcher {
 				}
 				searchQuery = logicReplacer(searchQuery);
 				return indexSearcher.search(booleanQuery.build(), LuceneConstants.MAX_SEARCH);
-			case 3:
+			case 3: //phrase
 				PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
 				List<String> arraySearchQueryPhrase = stringToArrayList(searchQuery);
 				for(String s:arraySearchQueryPhrase) {
 					phraseQuery.add(new Term(fieldType,s));
 				}
 				return indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
-			case 4:	
-				queryParser = new QueryParser(fieldType, new StandardAnalyzer());
+			case 4:	//fields
+				queryParser = new QueryParser(fieldType, new StandardAnalyzer()); 
 				query = queryParser.parse(searchQuery);
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
-			case 5:
+			case 5: //top-k
 				TopDocs hits = getHits(searchQuery);
 				if (hits.totalHits.toString().contains("1")){
 					queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
@@ -120,7 +141,6 @@ public class Searcher {
 					return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 				}
 		}
-		
 		return null;
 	}
 	
@@ -129,17 +149,7 @@ public class Searcher {
 		String path = LuceneConstants.DATA_DIR+filename;
 		fieldQuery.add(new Term(LuceneConstants.FILE_PATH,path));
 		TopDocs hits = indexSearcher.search(fieldQuery.build(), LuceneConstants.MAX_SEARCH);
-	//	return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 		return hits;
-	}
-	
-	public TopDocs searchByField(String fieldType, String query) throws IOException {
-		PhraseQuery.Builder fieldquery = new PhraseQuery.Builder();
-		List<String> arraySearchQueryPhrase = stringToArrayList(query);
-		for(String s:arraySearchQueryPhrase) {
-			fieldquery.add(new Term(fieldType,s));
-		}
-		return indexSearcher.search(fieldquery.build(), LuceneConstants.MAX_SEARCH);
 	}
 	
 	public Document getDocument(ScoreDoc scoreDoc) throws CorruptIndexException, IOException {

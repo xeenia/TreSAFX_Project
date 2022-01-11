@@ -2,6 +2,7 @@ package application;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,11 +14,15 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MultiBits;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Bits;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
@@ -65,30 +70,30 @@ public class Indexer extends PreProcessoring{
 	public void createIndex(String dataDirPath, FileFilter filter, ArrayList<String> articles,TextArea indexingInfo) throws IOException {
 		String previous = indexingInfo.getText();
 		File[] indexfiles = new File(LuceneConstants.INDEX_DIR).listFiles();
-		File[] files = new File(dataDirPath).listFiles();
-		for (File file : files) { 
-			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
-					for(String str:articles) {
-						if(file.getName().contains(str)) {	
-							TopDocs hits=null;
-							if(indexfiles.length!=1) {
-								Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
-								 hits = searcher.getHits(str);
-							}else {
-								indexFile(file,indexingInfo);
-								continue;
-							}
-							if(hits.totalHits.toString().contains("1")) {
-								previous = indexingInfo.getText();
-								indexingInfo.setText(previous+"The file: "+str+" already exist."+"\n");
-							}else {
-								indexFile(file,indexingInfo);
-							}
-							articles.remove(str);
-							break;
-				        }
-					}
+		File file=null;
+		for(String str:articles) {
+			file = new File(dataDirPath+"\\"+str);
+			if(file.exists()) {
+				TopDocs hits=null;
+				if(indexfiles.length!=1) {
+					Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
+					 hits = searcher.getHits(str);
+					 searcher.close();
+				}else {
+					indexFile(file,indexingInfo);
+					continue;
+				}
+				if(hits.totalHits.toString().contains("1")) {
+					previous = indexingInfo.getText();
+					indexingInfo.setText(previous+"The file: "+str+" already exist."+"\n");
+				}else {
+					indexFile(file,indexingInfo);
+				}
+			}else{
+				previous = indexingInfo.getText();
+				indexingInfo.setText(previous+"File <<"+str+">> not found in Data Folder.\n");
 			}
+			
 		}
 		previous = indexingInfo.getText();
 		indexingInfo.setText(previous+writer.numRamDocs() + " File(s) indexed\n");
@@ -97,5 +102,8 @@ public class Indexer extends PreProcessoring{
 	public void close() throws CorruptIndexException, IOException {
 		writer.close();
 	}
+	
+	
+	
 	
 }

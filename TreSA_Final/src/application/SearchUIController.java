@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
@@ -37,6 +36,8 @@ public class SearchUIController {
 	@FXML private TextField tf_articleName;
 	@FXML private TextField tf_k_num;
 	
+	@FXML private TextArea tx_booleanModel;
+	
 	@FXML private Button b_clear;
 	@FXML private Button b_search;
 	@FXML private Button b_back;
@@ -50,13 +51,13 @@ public class SearchUIController {
 	
 	@FXML private ListView<VBox> lv_showedDocs;
 	
-	@FXML Label l_title;
-	@FXML Label l_people;
-	@FXML Label l_places;
-	@FXML Label l_contents;
-	@FXML Label l_errorMessage;
-	@FXML Label l_hits;
-	@FXML Label l_example;
+	@FXML private Label l_title;
+	@FXML private Label l_people;
+	@FXML private Label l_places;
+	@FXML private Label l_contents;
+	@FXML private Label l_errorMessage;
+	@FXML private Label l_hits;
+	@FXML private Label l_example;
 	
 	@FXML private Text t_title;
 	@FXML private Text t_people;
@@ -64,8 +65,9 @@ public class SearchUIController {
 	@FXML private Text t_contents;
 	
 	@FXML private ScrollPane scroll;
+	
 	@FXML private VBox contentvbox;
-	@FXML private TextArea tx_booleanModel;
+	
 	
 	// Go back to the main scene when the logo is clicked
 	@FXML private void goBackLogo(ActionEvent event) throws IOException {
@@ -77,23 +79,14 @@ public class SearchUIController {
 	}
 	
 	@FXML private void clearButton(ActionEvent event) {
-		if(tb_phrases.isSelected()||tb_vector.isSelected()) {
 			tf_search.setText("");
-		}else if(tb_field.isSelected()) {
-			clearButtonFunc();
-		}else if(tb_boolean.isSelected()) {
+			tf_fieldTitle.setText("");
+			tf_fieldPeople.setText("");
+			tf_fieldPlaces.setText("");
+			tf_fieldContents.setText("");
 			tx_booleanModel.setText("");
-		}else {
 			tf_articleName.setText("");
 			tf_k_num.setText("");
-		}
-	}
-	
-	private void clearButtonFunc() {
-		tf_fieldTitle.setText("");
-		tf_fieldPeople.setText("");
-		tf_fieldPlaces.setText("");
-		tf_fieldContents.setText("");
 	}
 
 	// Choosing a button, the current search option will become editable and an example will appear
@@ -217,16 +210,16 @@ public class SearchUIController {
 			   !(tf_fieldContents.getText().isBlank())
 			){
 				if(!(tf_fieldTitle.getText().isBlank())) {
-					search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.TITLE,4);
+					search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.CONTENTS,4);  //search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.TITLE,4);
 				}
 				if(!(tf_fieldPeople.getText().isBlank())) {
-					search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.PEOPLE,4);
+					search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldPeople.getText().toLowerCase(), LuceneConstants.PEOPLE,4);
 				}
 				if(!(tf_fieldPlaces.getText().isBlank())) {
-					search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.PLACES,4);
+					search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldPlaces.getText().toLowerCase(), LuceneConstants.PLACES,4);
 				}
 				if(!(tf_fieldContents.getText().isBlank())) {
-					search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4);
+					search(tf_fieldContents.getText().toLowerCase(), LuceneConstants.CONTENTS,4); //search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4);
 				}
 			}
 			else {
@@ -251,7 +244,7 @@ public class SearchUIController {
 				k=Integer.valueOf(kStr);
 				articleNameString.append(" "+k);
 				search(articleNameString.toString(),LuceneConstants.FILE_NAME,5);
-			}catch(NumberFormatException e) {l_errorMessage.setText("You must write a number.");}
+			}catch(NumberFormatException e) {l_errorMessage.setText("You must write a number."); l_errorMessage.setVisible(true);}
 		}
 	}
 	
@@ -272,43 +265,49 @@ public class SearchUIController {
 			// Searching query
 			  hits = searcher.search(choice, searchQuery,fieldType);
 		 }
-		 
-		 long endTime = System.currentTimeMillis();
-		 DocumentFromSearch document;
-		 l_hits.setText(hits.totalHits +" documents found. Time :" + (endTime - startTime));
-		 l_hits.setVisible(true);
-		 
-		 // Clear the listview of showed docs in order not to show duplications
-		 lv_showedDocs.getItems().clear();
-		 boolean articleComp = false;
-		 // This "If" expression: If the user selected option 5 (article comparison) enter first option 
-		 if(choice==5) {
-			 	// Prints from higher to lower scores for article comparison
-				int n = 0;
-				for (ScoreDoc scoreDoc : hits.scoreDocs) {
-					if(n==Integer.valueOf(str[1])+1) {
-						break;
-					}
-					if (n == 0) {
+		 if(hits!=null) {
+			 long endTime = System.currentTimeMillis();
+			 DocumentFromSearch document;
+			 l_hits.setText(hits.totalHits +" documents found. Time :" + (endTime - startTime));
+			 l_hits.setVisible(true);
+			 
+			 // Clear the listview of showed docs in order not to show duplications
+			 lv_showedDocs.getItems().clear();
+			 boolean articleComp = false;
+			 // This "If" expression: If the user selected option 5 (article comparison) enter first option 
+			 if(choice==5) {
+				 	// Prints from higher to lower scores for article comparison
+					int n = 0;
+					for (ScoreDoc scoreDoc : hits.scoreDocs) {
+						if(n==Integer.valueOf(str[1])+1) {
+							break;
+						}
+						if (n == 0) {
+							n++;
+							continue;
+						}
+						Document doc = searcher.getDocument(scoreDoc);
+						
+						document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,"top");
+						document.setScore(scoreDoc);
+						showDocuments(document, searchQuery,fieldType); 
 						n++;
-						continue;
 					}
-					Document doc = searcher.getDocument(scoreDoc);
-					
-					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,"top");
-					document.scoreDoc=scoreDoc;
-					showDocuments(document, searchQuery,fieldType); 
-					n++;
 				}
-			}
-		 else {
-			 for(ScoreDoc scoreDoc : hits.scoreDocs) {
-				 Document doc = searcher.getDocument(scoreDoc);
-				 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,fieldType);
-				 showDocuments(document, searchQuery,fieldType); 
+			 else {
+				 int i=0;
+				 for(ScoreDoc scoreDoc : hits.scoreDocs) {
+					 Document doc = searcher.getDocument(scoreDoc);
+					 document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,fieldType);
+					 showDocuments(document, searchQuery,fieldType); 
+				 }
 			 }
+			 searcher.close();
+		 }else {
+			 l_errorMessage.setVisible(true);
+			 l_errorMessage.setText("This file does not exist in Indexer.");
 		 }
-		 searcher.close();
+		 
 	}
 	
 	public void setListView() {
@@ -333,19 +332,19 @@ public class SearchUIController {
 			case 4:
 				if(!query[0].isBlank()) {
 					tf_fieldTitle.setText(query[0]);
-					search(query[0],LuceneConstants.TITLE,4);
+					search(query[0],LuceneConstants.CONTENTS,4); //search(query[0],LuceneConstants.TITLE,4);
 				}
 				if(!query[1].isBlank()) {
 					tf_fieldPeople.setText(query[1]);
-					search(query[1], LuceneConstants.PEOPLE,4);
+					search(query[1], LuceneConstants.CONTENTS,4); //search(query[1], LuceneConstants.PEOPLE,4);
 				}
 				if(!query[2].isBlank()) {
 					tf_fieldPlaces.setText(query[2]);
-					search(query[2], LuceneConstants.PLACES,4);
+					search(query[2], LuceneConstants.CONTENTS,4); //search(query[2], LuceneConstants.PLACES,4);
 				}
 				if(!query[3].isBlank()) {
 					tf_fieldContents.setText(query[3]);
-					search(query[3],LuceneConstants.BODY,4);
+					search(query[3],LuceneConstants.CONTENTS,4); //search(query[3],LuceneConstants.BODY,4);
 				}
 				break;
 			case 5:
@@ -366,8 +365,7 @@ public class SearchUIController {
 			stage.show();
 		}else {
 			showDocVisible(false);
-		}
-		
+		}	
 	}
 
 	public void showDocuments(DocumentFromSearch document, String searchQuery,String fieldtype){
@@ -384,7 +382,7 @@ public class SearchUIController {
 			Text bold = new Text();
 			bold.setStyle("-fx-font-weight: bold;");
 			bold.setText("Score: ");
-			text3.setText(String.valueOf(document.scoreDoc.score));
+			text3.setText(String.valueOf(document.getScore().score));
 			flow.getChildren().addAll(bold,text3);
 			VBox vbox = new VBox();
 			vbox.getChildren().addAll(link,text2,flow);
@@ -401,7 +399,8 @@ public class SearchUIController {
 		vbox.getChildren().addAll(link,text2,text3);
 		
 		// Putting the doc in listview
-		lv_showedDocs.getItems().add(vbox);	}
+		lv_showedDocs.getItems().add(vbox);	
+		}
 	}
 	
 	// Hiding the listview and showing the context of the specific doc we selected

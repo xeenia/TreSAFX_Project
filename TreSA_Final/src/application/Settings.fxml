@@ -23,7 +23,7 @@
                   <Font name="Century Schoolbook Bold" size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="tf_addingDocs" layoutX="147.0" layoutY="118.0" prefHeight="25.0" prefWidth="218.0" promptText="Article2.txt Article5.txt" />
+            <TextField fx:id="tf_addingDocs" layoutX="147.0" layoutY="118.0" prefHeight="25.0" prefWidth="218.0" promptText="Article2.txt Article5.txt" style="-fx-border-color: #423F3E;" />
             <Button fx:id="b_addingDocs" layoutX="379.0" layoutY="118.0" mnemonicParsing="false" onAction="#addingDocsButton" prefHeight="25.0" prefWidth="92.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Add Files" textFill="WHITE">
                <font>
                   <Font name="Century Schoolbook Bold" size="12.0" />
@@ -36,7 +36,7 @@
                   <Font name="Century Schoolbook Bold" size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="tf_deletingDocs" layoutX="147.0" layoutY="150.0" prefHeight="25.0" prefWidth="218.0" promptText="Article2.txt Article6.txt" />
+            <TextField fx:id="tf_deletingDocs" layoutX="147.0" layoutY="150.0" prefHeight="25.0" prefWidth="218.0" promptText="Article2.txt Article6.txt" style="-fx-border-color: #423F3E;" />
             <Button fx:id="b_deletingDocs" layoutX="379.0" layoutY="150.0" mnemonicParsing="false" onAction="#deletingDocsButton" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Delete Files" textFill="WHITE">
                <font>
                   <Font name="Century Schoolbook Bold" size="12.0" />
@@ -56,10 +56,10 @@
                   <Font name="Century Schoolbook Bold" size="17.0" />
                </font>
             </Label>
-            <TextField fx:id="tf_editFile" layoutX="147.0" layoutY="185.0" prefHeight="25.0" prefWidth="218.0" promptText="Article4.txt" />
-            <TextField fx:id="tf_title" disable="true" layoutX="77.0" layoutY="252.0" prefHeight="25.0" prefWidth="391.0" />
-            <TextField fx:id="tf_people" disable="true" layoutX="77.0" layoutY="285.0" prefHeight="25.0" prefWidth="391.0" />
-            <TextField fx:id="tf_place" disable="true" layoutX="77.0" layoutY="315.0" prefHeight="25.0" prefWidth="391.0" />
+            <TextField fx:id="tf_editFile" layoutX="147.0" layoutY="185.0" prefHeight="25.0" prefWidth="218.0" promptText="Article4.txt" style="-fx-border-color: #423F3E;" />
+            <TextField fx:id="tf_title" disable="true" layoutX="77.0" layoutY="252.0" prefHeight="25.0" prefWidth="391.0" style="-fx-border-color: #423F3E;" />
+            <TextField fx:id="tf_people" disable="true" layoutX="77.0" layoutY="285.0" prefHeight="25.0" prefWidth="391.0" style="-fx-border-color: #423F3E;" />
+            <TextField fx:id="tf_place" disable="true" layoutX="77.0" layoutY="315.0" prefHeight="25.0" prefWidth="391.0" style="-fx-border-color: #423F3E;" />
             <Label fx:id="l_title" disable="true" layoutX="21.0" layoutY="256.0" text="Title" textFill="WHITE">
                <font>
                   <Font name="Century Schoolbook Bold" size="14.0" />
@@ -80,7 +80,7 @@
                   <Font name="Century Schoolbook Bold" size="14.0" />
                </font>
             </Label>
-            <TextArea fx:id="ta_content" disable="true" layoutX="77.0" layoutY="346.0" prefHeight="190.0" prefWidth="391.0" />
+            <TextArea fx:id="ta_content" disable="true" layoutX="77.0" layoutY="346.0" prefHeight="190.0" prefWidth="391.0" style="-fx-border-color: #423F3E;" />
             <Button fx:id="b_editFile" layoutX="379.0" layoutY="185.0" mnemonicParsing="false" onAction="#editSpecificDoc" prefHeight="25.0" prefWidth="92.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Edit File" textFill="WHITE">
                <font>
                   <Font name="Century Schoolbook Bold" size="12.0" />
@@ -133,7 +133,7 @@
       </Pane>
       <Pane prefHeight="599.0" prefWidth="418.0" style="-fx-background-color: white;">
          <children>
-            <TextArea fx:id="ta_status" editable="false" layoutX="53.0" layoutY="65.0" prefHeight="476.0" prefWidth="301.0" style="-fx-background-color: #423F3E; -fx-border-color: #423F3E;" wrapText="true">
+            <TextArea fx:id="ta_status" editable="false" layoutX="53.0" layoutY="65.0" prefHeight="222.0" prefWidth="301.0" style="-fx-background-color: #423F3E; -fx-border-color: #423F3E;" wrapText="true">
                <font>
                   <Font name="Century Schoolbook Bold Italic" size="13.0" />
                </font>
@@ -142,9 +142,15 @@
                </cursor></TextArea>
             <Label layoutX="53.0" layoutY="49.0" text="Status:" textFill="#423f3e">
                <font>
-                  <Font name="Century Schoolbook Bold" size="9.0" />
+                  <Font name="Century Schoolbook Bold" size="10.0" />
                </font>
             </Label>
+            <Label layoutX="53.0" layoutY="326.0" text="All Documents in Lucene Index">
+               <font>
+                  <Font name="Century Schoolbook Bold" size="12.0" />
+               </font>
+            </Label>
+            <TextArea fx:id="ta_indexer" editable="false" layoutX="53.0" layoutY="341.0" prefHeight="222.0" prefWidth="301.0" style="-fx-background-color: #423F3E; -fx-border-color: #423F3E;" />
          </children></Pane>
    </children>
 </HBox>

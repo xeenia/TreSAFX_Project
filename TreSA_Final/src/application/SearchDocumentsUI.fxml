@@ -112,7 +112,7 @@
             </Label>
             <Pane prefHeight="87.0" prefWidth="235.0">
                <children>
-                  <ToggleButton fx:id="tb_phrases" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#phrasesToddlerButton" prefHeight="30.0" prefWidth="135.0" selected="true" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Phrases" textFill="WHITE">
+                  <ToggleButton fx:id="tb_phrases" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" onAction="#phrasesToddlerButton" prefHeight="30.0" prefWidth="135.0" selected="true" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Phrases" textFill="WHITE">
                      <toggleGroup>
                         <ToggleGroup fx:id="searchOptions" />
                      </toggleGroup>
@@ -123,7 +123,7 @@
                         <Font name="Century Schoolbook Bold" size="12.0" />
                      </font>
                   </ToggleButton>
-                  <ToggleButton fx:id="tb_vector" layoutX="152.0" layoutY="14.0" mnemonicParsing="false" onAction="#vectorToddlerButton" prefHeight="30.0" prefWidth="130.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Vector Space" textFill="WHITE" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_vector" layoutX="154.0" layoutY="20.0" mnemonicParsing="false" onAction="#vectorToddlerButton" prefHeight="30.0" prefWidth="130.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Vector Space" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -140,7 +140,7 @@
             </Pane>
             <Pane prefHeight="255.0" prefWidth="235.0">
                <children>
-                  <ToggleButton fx:id="tb_field" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#fieldsToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="By Field" textFill="WHITE" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_field" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#fieldsToddlerButton" prefHeight="30.0" prefWidth="271.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="By Field" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -153,7 +153,7 @@
                         <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="269.0" promptText="Search for Title" style="-fx-border-color: #171010;">
+                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="271.0" promptText="Search for Title" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -163,17 +163,17 @@
                         <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0" promptText="Search for a Person" style="-fx-border-color: #171010;">
+                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="271.0" promptText="Search for a Person" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="267.0" promptText="Search for a Place" style="-fx-border-color: #171010;">
+                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="271.0" promptText="Search for a Place" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="267.0" promptText="Search in Content" style="-fx-border-color: #171010;">
+                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="271.0" promptText="Search in Content" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -192,7 +192,7 @@
             </Pane>
             <Pane prefHeight="282.0" prefWidth="302.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ToggleButton fx:id="tb_boolean" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#booleanToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Boolean Model" textFill="WHITE" toggleGroup="$searchOptions">
+                  <ToggleButton fx:id="tb_boolean" layoutX="13.0" layoutY="6.0" mnemonicParsing="false" onAction="#booleanToddlerButton" prefHeight="30.0" prefWidth="271.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Boolean Model" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -224,15 +224,15 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
-                  <TextArea fx:id="tx_booleanModel" disable="true" layoutX="14.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" promptText="Search with &amp;&amp;, || and ^" style="-fx-border-color: #171010;" />
+                  <TextArea fx:id="tx_booleanModel" disable="true" layoutX="13.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" promptText="Search with &amp;&amp;, || and ^" style="-fx-border-color: #171010;" />
                   <Label fx:id="l_errorMessage" layoutX="15.0" layoutY="203.0" text="errorMessage" textFill="WHITE" visible="false">
                      <font>
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_articleName" disable="true" layoutX="14.0" layoutY="129.0" prefHeight="27.0" prefWidth="207.0" promptText="Article name" style="-fx-border-color: #171010;" />
-                  <TextField fx:id="tf_k_num" disable="true" layoutX="220.0" layoutY="129.0" prefHeight="27.0" prefWidth="65.0" promptText="K num" style="-fx-border-color: #171010;" />
-                  <ToggleButton fx:id="tb_TopK" layoutX="14.0" layoutY="95.0" mnemonicParsing="false" onAction="#topKToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Top-K" textFill="WHITE" toggleGroup="$searchOptions">
+                  <TextField fx:id="tf_articleName" disable="true" layoutX="13.0" layoutY="129.0" prefHeight="27.0" prefWidth="207.0" promptText="Article name" style="-fx-border-color: #171010;" />
+                  <TextField fx:id="tf_k_num" disable="true" layoutX="220.0" layoutY="129.0" prefHeight="27.0" prefWidth="64.0" promptText="K num" style="-fx-border-color: #171010;" />
+                  <ToggleButton fx:id="tb_TopK" layoutX="13.0" layoutY="95.0" mnemonicParsing="false" onAction="#topKToddlerButton" prefHeight="30.0" prefWidth="271.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Top-K" textFill="WHITE" toggleGroup="$searchOptions">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

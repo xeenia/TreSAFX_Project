@@ -14,5 +14,5 @@ public class LuceneConstants {
 	 private static String absolutePath = new File(".").getAbsolutePath(); 
 	 public static final String INDEX_DIR = absolutePath.substring(0,absolutePath.length()-1) + "Index\\";
 	 public static final String DATA_DIR = absolutePath.substring(0,absolutePath.length()-1) + "Data\\";
-	 public static final int MAX_SEARCH = 10;
+	 public static final int MAX_SEARCH = 2000;
 }

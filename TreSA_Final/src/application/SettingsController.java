@@ -37,38 +37,43 @@ import javafx.stage.Stage;
 public class SettingsController {
 	@FXML private TextField tf_addingDocs;
 	@FXML private TextField tf_deletingDocs;
-	@FXML private Button b_back;
-	@FXML private Button b_addingDocs;
-	@FXML private Button b_deletingDocs;	
-	@FXML private TextArea ta_status;
-	
-	@FXML private TextArea ta_content;
 	@FXML private TextField tf_editFile;
 	@FXML private TextField tf_title;
 	@FXML private TextField tf_place;
 	@FXML private TextField tf_people;
+	
+	@FXML private TextArea ta_status;
+	@FXML private TextArea ta_content;
+	@FXML private TextArea ta_indexer;
+	
+	@FXML private Button b_back;
+	@FXML private Button b_addingDocs;
+	@FXML private Button b_deletingDocs;
 	@FXML private Button b_editFile;
 	@FXML private Button b_clear;
 	@FXML private Button b_save;
 	@FXML private Button b_cancel;
-
+	@FXML private Button b_delete_all;
+	@FXML private Button b_addFileExplorer;
+	
 	@FXML private Label l_title;
 	@FXML private Label l_people;
 	@FXML private Label l_place;
 	@FXML private Label l_content;
 	
-	@FXML private Button b_delete_all;
-	
-	@FXML private Button b_addFileExplorer;
-	//@FXML private Button b_deleteFileExplorer;
 	@FXML private HBox hbox;
-	
-	
-	
+		
 	static String indexDir = LuceneConstants.INDEX_DIR;
 	static String dataDir = LuceneConstants.DATA_DIR;
 	Indexer indexer;
 	IndexWriter writer;
+	
+	@FXML public void showDocsInIndexer() throws IOException {
+		Searcher seacrher = new Searcher(indexDir);
+		ta_indexer.setText("");
+		seacrher.printDocuments(ta_indexer);
+	}
+	
 	@FXML private void deleteAllButton(ActionEvent event) throws IOException {
 		if (writer == null) {
 			Path path = Paths.get(LuceneConstants.INDEX_DIR);
@@ -78,6 +83,15 @@ public class SettingsController {
         }
 		try {
             writer.deleteAll();
+            writer.commit();
+            File[] files = new File(LuceneConstants.INDEX_DIR).listFiles();
+            for(File file:files) {
+            	if(!file.toString().contains("write")) {
+            		file.delete();
+            	}
+            }
+            ta_status.setText("All documents have been deleted.");
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,8 +113,8 @@ public class SettingsController {
 			}
 			createIndex(documents);
 		}
-		
 	}
+	
 	// Going back to main UI when the back button its clicked
 	@FXML private void backButton(ActionEvent event) throws IOException {
 		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
@@ -190,43 +204,47 @@ public class SettingsController {
 		Boolean flag=false;
 		String[] fileName = file.split(" ");
 		if(checkTheFileName((fileName.length>1)?"fdsfds":file)) {
-			setDisability(false);
 			TopDocs hits = searcher.getHits(file);
 			if(hits.totalHits.toString().contains("1")) {				
-				ta_status.setText("The file "+file+" exist in Indexer. The changes will appear \nalso when you will search the specific document.");
-			}
-				File filename = new File(LuceneConstants.DATA_DIR+file);
-				BufferedReader reader = new BufferedReader(new FileReader(filename));
-				String line=null;
-				while((line = reader.readLine()) != null) {
-					if(line.contains("<TITLE>")) {
-						line = line.replace("<TITLE>", "");
-						line = line.replace("</TITLE>", "");
-						tf_title.setText(line);
-					}
-					if(line.contains("<PEOPLE>")) {
-						line = line.replace("<PEOPLE>", "");
-						line = line.replace("</PEOPLE>", "");
-						tf_people.setText(line);
-					}
-					if(line.contains("<PLACES>")) {
-						line = line.replace("<PLACES>", "");
-						line = line.replace("</PLACES>", "");
-						tf_place.setText(line);
-					}
-					if(line.contains("<BODY>")||flag) {
-						flag=true;
-						line = line.replace("<BODY>", "");
-						line = line.replace("</BODY>", "");
-						String str = ta_content.getText();
-						if(str.isEmpty())
-							ta_content.setText(str+line);
-						else {
-							ta_content.setText(str+"\n"+line);
-						}
-					}
+				ta_status.setText("The file "+file+" exist in Indexer.");
 				}
-				reader.close();
+				File filename = new File(LuceneConstants.DATA_DIR+file);
+				if(filename.exists()) {
+					setDisability(false);
+					BufferedReader reader = new BufferedReader(new FileReader(filename));
+					String line=null;
+					while((line = reader.readLine()) != null) {
+						if(line.contains("<TITLE>")) {
+							line = line.replace("<TITLE>", "");
+							line = line.replace("</TITLE>", "");
+							tf_title.setText(line);
+						}
+						if(line.contains("<PEOPLE>")) {
+							line = line.replace("<PEOPLE>", "");
+							line = line.replace("</PEOPLE>", "");
+							tf_people.setText(line);
+						}
+						if(line.contains("<PLACES>")) {
+							line = line.replace("<PLACES>", "");
+							line = line.replace("</PLACES>", "");
+							tf_place.setText(line);
+						}
+						if(line.contains("<BODY>")||flag) {
+							flag=true;
+							line = line.replace("<BODY>", "");
+							line = line.replace("</BODY>", "");
+							String str = ta_content.getText();
+							if(str.isEmpty())
+								ta_content.setText(str+line);
+							else {
+								ta_content.setText(str+"\n"+line);
+							}
+						}
+					}	
+					reader.close();
+				}else {
+					ta_status.setText("This file does not exist in Data Folder.");
+				}
 		}else {
 			String str1 = ta_status.getText();
 			if(fileName.length>1) {
@@ -238,7 +256,7 @@ public class SettingsController {
 			}
 			
 		}
-		
+		searcher.close();
 	}
 	
 	private void clear() {
@@ -276,8 +294,7 @@ public class SettingsController {
 			clear();
 			tf_editFile.setText("");
 			if(hits.totalHits.toString().contains("1")) createIndex(arr);
-			
-			
+			searcher.close();	
 		}
 	}
 	
