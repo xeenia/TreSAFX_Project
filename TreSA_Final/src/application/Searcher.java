@@ -28,6 +28,8 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -38,6 +40,7 @@ public class Searcher {
 	IndexReader indexReader;
 	Query query;
 	
+	QueryParser queryParser;
 	public Searcher(String indexDirectoryPath) throws IOException {
 		Path indexPath = Paths.get(indexDirectoryPath);
 		indexDirectory = FSDirectory.open(indexPath);
@@ -50,7 +53,7 @@ public class Searcher {
 		
 		switch(choice) {
 			case 1:
-				QueryParser queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
+				queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 				query = queryParser.parse(searchQuery);
 				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 			case 2:
@@ -100,12 +103,13 @@ public class Searcher {
 					phraseQuery.add(new Term(fieldType,s));
 				}
 				return indexSearcher.search(phraseQuery.build(), LuceneConstants.MAX_SEARCH);
-			case 4:
-				QueryParser parser = new QueryParser(fieldType, new StandardAnalyzer());
-				Query query2 = parser.parse(searchQuery);
-				return indexSearcher.search(query2, LuceneConstants.MAX_SEARCH);
+			case 4:	
+				queryParser = new QueryParser(fieldType, new StandardAnalyzer());
+				query = queryParser.parse(searchQuery);
+				return indexSearcher.search(query, LuceneConstants.MAX_SEARCH);
 			case 5:
-				if (checkExistanceOfFile(searchQuery)){
+				TopDocs hits = getHits(searchQuery);
+				if (hits.totalHits.toString().contains("1")){
 					queryParser = new QueryParser(LuceneConstants.CONTENTS, new StandardAnalyzer());
 					// Idea: "searchQuery" variable should become LuceneConstants.CONTENTS of the file we searched
 					// (file name is inside searchQuery variable)
@@ -155,22 +159,12 @@ public class Searcher {
 		return al;
 	}
 	
-	public String documentContext(String searchQuery) throws IOException {
+	public String documentContext(String searchQuery) throws IOException {	
 		Set<String> h = new HashSet<>() {{ add(LuceneConstants.CONTENTS); }};
-		ArrayList<String> fileNumbers = new ArrayList<>();
-		for(int i=0 ; i < numberOfFiles() ; i++){
-			String s=String.valueOf(i);
-			fileNumbers.add(s);
-		}
-		Collections.sort(fileNumbers);
-		int positionInsideIndex=0;
+		TopDocs hits=getHits(searchQuery);
+		Document doc = getDocument(hits.scoreDocs[0]);
 		searchQuery = searchQuery.replace("Article","");
-		for (String a: fileNumbers) {
-			if(a.equals(searchQuery)) { break; }
-			positionInsideIndex++;
-		}
-		Document documentSearched = indexReader.document(positionInsideIndex,h);
-		return documentSearched.toString();
+		return doc.get(LuceneConstants.CONTENTS);
 	}
 	
 	static long numberOfFiles() throws IOException {
@@ -179,7 +173,7 @@ public class Searcher {
 		}
 	}
 	
-	public boolean checkExistanceOfFile(String searchQuery) throws IOException {
+	public boolean checkExistanceOfFile(String searchQuery) throws IOException { 
 		PhraseQuery.Builder phraseQuery = new PhraseQuery.Builder();
 		List<String> arraySearchQueryPhrase = stringToArrayList(searchQuery+".txt");
 		for (String s : arraySearchQueryPhrase) {

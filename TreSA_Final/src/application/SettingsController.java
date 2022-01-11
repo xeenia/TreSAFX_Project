@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriter;
@@ -28,7 +29,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class SettingsController {
@@ -37,9 +40,7 @@ public class SettingsController {
 	@FXML private Button b_back;
 	@FXML private Button b_addingDocs;
 	@FXML private Button b_deletingDocs;	
-	@FXML private TextArea ta_documents;
 	@FXML private TextArea ta_status;
-	@FXML private TextArea ta_docsInIndexer;
 	
 	@FXML private TextArea ta_content;
 	@FXML private TextField tf_editFile;
@@ -56,20 +57,50 @@ public class SettingsController {
 	@FXML private Label l_place;
 	@FXML private Label l_content;
 	
+	@FXML private Button b_delete_all;
+	
+	@FXML private Button b_addFileExplorer;
+	//@FXML private Button b_deleteFileExplorer;
+	@FXML private HBox hbox;
+	
+	
+	
 	static String indexDir = LuceneConstants.INDEX_DIR;
 	static String dataDir = LuceneConstants.DATA_DIR;
 	Indexer indexer;
 	IndexWriter writer;
-	// Showing the file names in text area that exist in Data folder
-	public void showFiles() {
-		File[] files = new File(LuceneConstants.DATA_DIR).listFiles();
-		String fileNames="";
-		for (File file : files) 	{
-		    fileNames = fileNames.concat(file.getName()+"\n");
-			ta_documents.setText(fileNames);
-		}
+	@FXML private void deleteAllButton(ActionEvent event) throws IOException {
+		if (writer == null) {
+			Path path = Paths.get(LuceneConstants.INDEX_DIR);
+	     	Directory directory = FSDirectory.open(path);
+	     	IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
+			writer = new IndexWriter(directory,config);
+        }
+		try {
+            writer.deleteAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 	
+	@FXML  private void addFileExplorerButton(ActionEvent event) throws IOException {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Choose an article");
+		Stage stage = (Stage) hbox.getScene().getWindow();
+		List<File> files = fileChooser.showOpenMultipleDialog(stage);	
+		StringBuilder builder = new StringBuilder();
+		if(files!=null) {
+			ArrayList<String> documents= new ArrayList();
+			for(File file : files) {
+				builder.append(file);
+				builder = builder.delete(0,builder.indexOf("Article"));
+				documents.add(builder.toString());
+				builder.delete(0, builder.length());
+			}
+			createIndex(documents);
+		}
+		
+	}
 	// Going back to main UI when the back button its clicked
 	@FXML private void backButton(ActionEvent event) throws IOException {
 		Parent searchPage = FXMLLoader.load(getClass().getResource("MainUI.fxml"));
@@ -125,8 +156,8 @@ public class SettingsController {
 				documents.add(str);
 			}else {
 				String str1 = ta_status.getText();
-				if(str1.isEmpty()) ta_status.setText("Incorrect file name2: "+ str);
-				else ta_status.setText(str1+"\n"+"Incorrect file name2: "+ str);
+				if(str1.isEmpty()) ta_status.setText("Incorrect file name: "+ str);
+				else ta_status.setText(str1+"\n"+"Incorrect file name: "+ str);
 			}
 		}
 		textField.setText("");
@@ -134,7 +165,7 @@ public class SettingsController {
 	}
 
 	private void createIndex(ArrayList<String> articles) throws IOException {
-		indexer = new Indexer(indexDir);
+		indexer = new Indexer(indexDir); 
 		indexer.createIndex(dataDir, new TextFileFilter(),articles,ta_status);	
 		indexer.close();
 	}

@@ -66,7 +66,7 @@ public class Indexer extends PreProcessoring{
 		String previous = indexingInfo.getText();
 		File[] indexfiles = new File(LuceneConstants.INDEX_DIR).listFiles();
 		File[] files = new File(dataDirPath).listFiles();
-		for (File file : files) {
+		for (File file : files) { 
 			if(!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file) ){			
 					for(String str:articles) {
 						if(file.getName().contains(str)) {	

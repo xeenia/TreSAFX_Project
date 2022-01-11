@@ -45,19 +45,19 @@ public class PreProcessoring{
 
 		// Delete the last new line separator
 		bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
-		entireText.deleteCharAt(entireText.length() - 1);
+		entireText.deleteCharAt(entireText.length() -1);
 		reader.close();
 		
 		// BODY
 		line = removingHTML(bodyBuilder.toString(),4);
 		line = removingPunctuation(line); 
 		line = removingStopwords(line);
-		entireText.append(line);
+		entireText.append(" "+line);
 		document.add(new Field(LuceneConstants.BODY, line, StringField.TYPE_STORED));
 
 		// For general searches
 		document.add(new Field(LuceneConstants.CONTENTS, entireText, TextField.TYPE_STORED));
-
+		
 		return document;
 	}
 	

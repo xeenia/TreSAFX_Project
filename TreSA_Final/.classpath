@@ -16,12 +16,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/lucene-8.9.0/queryparser/lucene-queryparser-8.9.0.jar">
+	<classpathentry kind="lib" path="C:/lucene-8.9.0/core/lucene-core-8.9.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/lucene-8.9.0/core/lucene-core-8.9.0.jar">
+	<classpathentry kind="lib" path="C:/lucene-8.9.0/queryparser/lucene-queryparser-8.9.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
@@ -33,6 +34,8 @@ public class SearchUIController {
 	@FXML private TextField	tf_fieldPeople;
 	@FXML private TextField	tf_fieldPlaces;
 	@FXML private TextField	tf_fieldContents;
+	@FXML private TextField tf_articleName;
+	@FXML private TextField tf_k_num;
 	
 	@FXML private Button b_clear;
 	@FXML private Button b_search;
@@ -43,6 +46,7 @@ public class SearchUIController {
 	@FXML protected ToggleButton tb_vector;
 	@FXML protected ToggleButton tb_field;
 	@FXML protected ToggleButton tb_boolean;
+	@FXML protected ToggleButton tb_TopK;
 	
 	@FXML private ListView<VBox> lv_showedDocs;
 	
@@ -79,6 +83,9 @@ public class SearchUIController {
 			clearButtonFunc();
 		}else if(tb_boolean.isSelected()) {
 			tx_booleanModel.setText("");
+		}else {
+			tf_articleName.setText("");
+			tf_k_num.setText("");
 		}
 	}
 	
@@ -105,6 +112,9 @@ public class SearchUIController {
 	@FXML private void booleanToddlerButton(ActionEvent event) {
 		optionSelected(3);
 	}
+	@FXML private void topKToddlerButton(ActionEvent event) {
+		optionSelected(4);
+	}
 	
 	// Setting disability for search option, epending on what has been selected
 	protected void optionSelected(int choice) {
@@ -113,16 +123,25 @@ public class SearchUIController {
 			setDisability(1,false);
 			setDisability(2,true);
 			setDisability(3,true);
+			setDisability(4,true);
 		}else if(choice == 2) {
 			// textFields for field search is editable
 			setDisability(1,true);
 			setDisability(2,false);
 			setDisability(3,true);
-		}else {			
+			setDisability(4,true);
+		}else if(choice==3){			
 			// textArea go boolean is editable
 			setDisability(1,true);
 			setDisability(2,true);
 			setDisability(3,false);
+			setDisability(4,true);
+		}else {
+			// textfields top-k is editable
+			setDisability(1,true);
+			setDisability(2,true);
+			setDisability(3,true);
+			setDisability(4,false);
 		}
 	}
 	
@@ -138,6 +157,9 @@ public class SearchUIController {
 			case 3:
 				tx_booleanModel.setDisable(bl);
 				break;
+			case 4:
+				tf_articleName.setDisable(bl);
+				tf_k_num.setDisable(bl);
 		}
 	}
 	
@@ -159,6 +181,7 @@ public class SearchUIController {
 	}
 	
 	@FXML private void searchButton(ActionEvent event) throws IOException, ParseException{
+		
 		/* In class Searcher -> method search -> parameter choice
 		 * 1 -> Vector Search
 		 * 2-> Boolean Search
@@ -188,13 +211,11 @@ public class SearchUIController {
 			}
 		}else if(tb_field.isSelected()) {
 			lv_showedDocs.getItems().clear();
-			Boolean allFieldsAreBlank=true;
 			if(!(tf_fieldTitle.getText().isBlank()) ||
 			   !(tf_fieldPeople.getText().isBlank())||
 			   !(tf_fieldPlaces.getText().isBlank())||
 			   !(tf_fieldContents.getText().isBlank())
 			){
-				allFieldsAreBlank = false;
 				if(!(tf_fieldTitle.getText().isBlank())) {
 					search(tf_fieldTitle.getText().toLowerCase(),LuceneConstants.TITLE,4);
 				}
@@ -207,11 +228,12 @@ public class SearchUIController {
 				if(!(tf_fieldContents.getText().isBlank())) {
 					search(tf_fieldContents.getText().toLowerCase(),LuceneConstants.BODY,4);
 				}
-				if(allFieldsAreBlank) {
-					l_errorMessage.setVisible(true);
-					l_errorMessage.setText("You must select at least one field.");
-				}
 			}
+			else {
+				l_errorMessage.setVisible(true);
+				l_errorMessage.setText("You must select at least one field.");
+			}
+			
 		}else if(tb_boolean.isSelected()) {
 			String isBlank = tx_booleanModel.getText().toLowerCase();
 			if(isBlank.length()!=0) {
@@ -220,6 +242,16 @@ public class SearchUIController {
 			}else {
 				l_errorMessage.setVisible(true);
 			}
+		}else if(tb_TopK.isSelected()) {
+			StringBuilder articleNameString = new StringBuilder();
+			articleNameString.append(tf_articleName.getText());
+			String kStr = tf_k_num.getText();
+			int k;
+			try {
+				k=Integer.valueOf(kStr);
+				articleNameString.append(" "+k);
+				search(articleNameString.toString(),LuceneConstants.FILE_NAME,5);
+			}catch(NumberFormatException e) {l_errorMessage.setText("You must write a number.");}
 		}
 	}
 	
@@ -230,9 +262,17 @@ public class SearchUIController {
 		 }
 		 Searcher searcher = new Searcher(LuceneConstants.INDEX_DIR);
 		 long startTime = System.currentTimeMillis();
+		 TopDocs hits;
+		 String[] str = new String[2];
+		 str[1]="1";
+		 if(choice==5) {
+			 str = searchQuery.split(" ");
+			 hits = searcher.search(choice, str[0],fieldType);
+		 }else {
+			// Searching query
+			  hits = searcher.search(choice, searchQuery,fieldType);
+		 }
 		 
-		 // Searching query
-		 TopDocs hits = searcher.search(choice, searchQuery,fieldType);
 		 long endTime = System.currentTimeMillis();
 		 DocumentFromSearch document;
 		 l_hits.setText(hits.totalHits +" documents found. Time :" + (endTime - startTime));
@@ -242,17 +282,21 @@ public class SearchUIController {
 		 lv_showedDocs.getItems().clear();
 		 boolean articleComp = false;
 		 // This "If" expression: If the user selected option 5 (article comparison) enter first option 
-		 if(articleComp) {
+		 if(choice==5) {
 			 	// Prints from higher to lower scores for article comparison
 				int n = 0;
 				for (ScoreDoc scoreDoc : hits.scoreDocs) {
+					if(n==Integer.valueOf(str[1])+1) {
+						break;
+					}
 					if (n == 0) {
 						n++;
 						continue;
 					}
 					Document doc = searcher.getDocument(scoreDoc);
 					
-					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_NAME), searchQuery,fieldType);
+					document = new DocumentFromSearch(doc.get(LuceneConstants.FILE_PATH), searchQuery,"top");
+					document.scoreDoc=scoreDoc;
 					showDocuments(document, searchQuery,fieldType); 
 					n++;
 				}
@@ -272,9 +316,44 @@ public class SearchUIController {
 	}
 	
 	// When the query is transfered then we search it
-	public void transferQuery(String query) throws IOException, ParseException {
-		tf_search.setText(query);
-		search(query,LuceneConstants.CONTENTS,3);
+	public void transferQuery(String[] query,int choice) throws IOException, ParseException {
+		switch(choice) {
+			case 1:
+				tf_search.setText(query[0]);
+				search(query[0],LuceneConstants.CONTENTS,1);
+				break;
+			case 2:
+				tx_booleanModel.setText(query[0]);
+				search(query[0],LuceneConstants.CONTENTS,2);
+				break;
+			case 3:
+				tf_search.setText(query[0]);
+				search(query[0],LuceneConstants.CONTENTS,3);
+				break;
+			case 4:
+				if(!query[0].isBlank()) {
+					tf_fieldTitle.setText(query[0]);
+					search(query[0],LuceneConstants.TITLE,4);
+				}
+				if(!query[1].isBlank()) {
+					tf_fieldPeople.setText(query[1]);
+					search(query[1], LuceneConstants.PEOPLE,4);
+				}
+				if(!query[2].isBlank()) {
+					tf_fieldPlaces.setText(query[2]);
+					search(query[2], LuceneConstants.PLACES,4);
+				}
+				if(!query[3].isBlank()) {
+					tf_fieldContents.setText(query[3]);
+					search(query[3],LuceneConstants.BODY,4);
+				}
+				break;
+			case 5:
+				tf_articleName.setText(query[0]);
+				tf_k_num.setText(query[1]);
+				search(query[0]+" "+query[1],LuceneConstants.FILE_NAME,5);
+		}
+		
 	}
 	
 	// Go back to the listview of documents
@@ -292,6 +371,27 @@ public class SearchUIController {
 	}
 
 	public void showDocuments(DocumentFromSearch document, String searchQuery,String fieldtype){
+		if(fieldtype.contains(LuceneConstants.FILE_NAME)) {
+			// In order to see the context of a document we need to click on title
+			Hyperlink link = makeHyperLink(document.getTitle(),document,searchQuery);
+			StringBuilder str = new StringBuilder();
+			str.append(document.getfilename());
+			str = str.delete(0, str.indexOf("Article"));
+			Text text2 = new Text(str.toString());
+			// Calling showQuery method in order to show where the query was found
+			Text text3 = new Text();
+			TextFlow flow = new TextFlow();
+			Text bold = new Text();
+			bold.setStyle("-fx-font-weight: bold;");
+			bold.setText("Score: ");
+			text3.setText(String.valueOf(document.scoreDoc.score));
+			flow.getChildren().addAll(bold,text3);
+			VBox vbox = new VBox();
+			vbox.getChildren().addAll(link,text2,flow);
+			
+			// Putting the doc in listview
+			lv_showedDocs.getItems().add(vbox);
+		}else {
 		// In order to see the context of a document we need to click on title
 		Hyperlink link = makeHyperLink(document.getTitle(),document,searchQuery);
 		Text text2 = new Text(document.getPerson()+", "+document.getPlace());
@@ -301,7 +401,7 @@ public class SearchUIController {
 		vbox.getChildren().addAll(link,text2,text3);
 		
 		// Putting the doc in listview
-		lv_showedDocs.getItems().add(vbox);	
+		lv_showedDocs.getItems().add(vbox);	}
 	}
 	
 	// Hiding the listview and showing the context of the specific doc we selected
@@ -324,7 +424,12 @@ public class SearchUIController {
 	
 	private TextFlow showQuery(String query,DocumentFromSearch doc,String fieldtype) {
 		TextFlow textFlow = new TextFlow();
-		String line = doc.getQueryAppereanceLine(fieldtype);
+		String line="";
+		if(!fieldtype.contains(LuceneConstants.FILE_NAME)) {
+			line = doc.getQueryAppereanceLine(fieldtype);
+		}else {
+			line="yaaa ";
+		}
 		String lowerCaseLine = line.toLowerCase();
 		String[] splittedQuery= {""};
 		// Splitting the query if it's from boolean model

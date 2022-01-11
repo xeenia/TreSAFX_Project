@@ -6,18 +6,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.lucene.search.ScoreDoc;
+
 public class DocumentFromSearch {
 	private String title;
 	private String person;
 	private String place;
 	private String content;
+	private String filename;
+	public ScoreDoc scoreDoc;
 	//we save the line where the query was found
 	private ArrayList<String> appearance;
 	//and also the field type (title,person etc.)
 	private ArrayList<String> appearanceType;
 	private String[] splittedQuery;
 	private Boolean isBooleanModel;
-	
+	public String getfilename() {
+		return filename;
+	}
 	public DocumentFromSearch(String path, String query,String fieldType) throws IOException{
 		isBooleanModel=false;
 		if(query.contains("||")||query.contains("&&")) {
@@ -32,6 +38,7 @@ public class DocumentFromSearch {
 		File file = new File(path);
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String line = null;
+		filename=path;
 		while ((line = reader.readLine()) != null) {
 			if(line.contains("<TITLE>")) {
 				line=line.replace("<TITLE>","");
@@ -47,8 +54,8 @@ public class DocumentFromSearch {
 					if(line.toLowerCase().contains(query.toLowerCase())) {
 						appearance.add(line);
 						appearanceType.add((flag)?LuceneConstants.CONTENTS:LuceneConstants.TITLE);
-						System.out.println(appearance.size()+"index "+appearance.get(0));
-						System.out.println(appearanceType.size()+"index "+appearanceType.get(0));
+						//System.out.println(appearance.size()+"index "+appearance.get(0));
+						//System.out.println(appearanceType.size()+"index "+appearanceType.get(0));
 					}		
 				}
 				//we save the title without the HTML 

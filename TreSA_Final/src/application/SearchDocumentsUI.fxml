@@ -131,7 +131,7 @@
                         <Font name="Century Schoolbook Bold" size="12.0" />
                      </font>
                   </ToggleButton>
-                  <TextField fx:id="tf_search" layoutX="13.0" layoutY="57.0" prefHeight="25.0" prefWidth="271.0">
+                  <TextField fx:id="tf_search" layoutX="13.0" layoutY="57.0" prefHeight="25.0" prefWidth="271.0" promptText="Search something" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -153,7 +153,7 @@
                         <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="269.0" promptText="Search for Title">
+                  <TextField fx:id="tf_fieldTitle" disable="true" layoutX="13.0" layoutY="70.0" prefHeight="25.0" prefWidth="269.0" promptText="Search for Title" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -163,17 +163,17 @@
                         <Font name="Century Schoolbook Bold Italic" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0" promptText="Search for a Person">
+                  <TextField fx:id="tf_fieldPeople" disable="true" layoutX="13.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0" promptText="Search for a Person" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="267.0" promptText="Search for a Place">
+                  <TextField fx:id="tf_fieldPlaces" disable="true" layoutX="13.0" layoutY="172.0" prefHeight="25.0" prefWidth="267.0" promptText="Search for a Place" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </TextField>
-                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="267.0" promptText="Search in Content">
+                  <TextField fx:id="tf_fieldContents" disable="true" layoutX="13.0" layoutY="223.0" prefHeight="25.0" prefWidth="267.0" promptText="Search in Content" style="-fx-border-color: #171010;">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -200,7 +200,7 @@
                         <Font name="Century Schoolbook Bold" size="12.0" />
                      </font>
                   </ToggleButton>
-                  <Button fx:id="b_search" layoutX="13.0" layoutY="98.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Search" textFill="WHITE">
+                  <Button fx:id="b_search" layoutX="13.0" layoutY="162.0" mnemonicParsing="false" onAction="#searchButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Search" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -208,7 +208,7 @@
                         <Font name="Century Schoolbook Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button fx:id="b_clear" layoutX="107.0" layoutY="99.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Clear" textFill="WHITE">
+                  <Button fx:id="b_clear" layoutX="109.0" layoutY="162.0" mnemonicParsing="false" onAction="#clearButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Clear" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -217,19 +217,29 @@
                      </font>
                   </Button>
                   <Label fx:id="l_example" layoutX="22.0" layoutY="141.0" text="Example" visible="false" />
-                  <Button fx:id="b_showedDocBackButton" layoutX="200.0" layoutY="99.0" mnemonicParsing="false" onAction="#showedDocBackButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Back" textFill="WHITE">
+                  <Button fx:id="b_showedDocBackButton" layoutX="204.0" layoutY="162.0" mnemonicParsing="false" onAction="#showedDocBackButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Back" textFill="WHITE">
                      <font>
                         <Font name="Century Schoolbook Bold" size="12.0" />
                      </font>
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Button>
-                  <TextArea fx:id="tx_booleanModel" layoutX="14.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" promptText="Search with &amp;&amp;, || and ^" />
-                  <Label fx:id="l_errorMessage" layoutX="15.0" layoutY="150.0" text="errorMessage" textFill="WHITE" visible="false">
+                  <TextArea fx:id="tx_booleanModel" disable="true" layoutX="14.0" layoutY="41.0" prefHeight="48.0" prefWidth="271.0" promptText="Search with &amp;&amp;, || and ^" style="-fx-border-color: #171010;" />
+                  <Label fx:id="l_errorMessage" layoutX="15.0" layoutY="203.0" text="errorMessage" textFill="WHITE" visible="false">
                      <font>
                         <Font name="System Bold Italic" size="12.0" />
                      </font>
                   </Label>
+                  <TextField fx:id="tf_articleName" disable="true" layoutX="14.0" layoutY="129.0" prefHeight="27.0" prefWidth="207.0" promptText="Article name" style="-fx-border-color: #171010;" />
+                  <TextField fx:id="tf_k_num" disable="true" layoutX="220.0" layoutY="129.0" prefHeight="27.0" prefWidth="65.0" promptText="K num" style="-fx-border-color: #171010;" />
+                  <ToggleButton fx:id="tb_TopK" layoutX="14.0" layoutY="95.0" mnemonicParsing="false" onAction="#topKToddlerButton" prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #2B2B2B; -fx-border-color: #171010;" text="Top-K" textFill="WHITE" toggleGroup="$searchOptions">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font name="Century Schoolbook Bold" size="12.0" />
+                     </font>
+                  </ToggleButton>
                </children>
             </Pane>
          </children>
