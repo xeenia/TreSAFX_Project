@@ -150,7 +150,11 @@
                   <Font name="Century Schoolbook Bold" size="12.0" />
                </font>
             </Label>
-            <TextArea fx:id="ta_indexer" editable="false" layoutX="53.0" layoutY="341.0" prefHeight="222.0" prefWidth="301.0" style="-fx-background-color: #423F3E; -fx-border-color: #423F3E;" />
+            <TextArea fx:id="ta_indexer" editable="false" layoutX="53.0" layoutY="341.0" prefHeight="222.0" prefWidth="301.0" style="-fx-background-color: #423F3E; -fx-border-color: #423F3E;">
+               <font>
+                  <Font name="Century Schoolbook Bold Italic" size="11.0" />
+               </font>
+            </TextArea>
          </children></Pane>
    </children>
 </HBox>

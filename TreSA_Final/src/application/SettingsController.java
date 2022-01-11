@@ -75,23 +75,15 @@ public class SettingsController {
 	}
 	
 	@FXML private void deleteAllButton(ActionEvent event) throws IOException {
-		if (writer == null) {
 			Path path = Paths.get(LuceneConstants.INDEX_DIR);
 	     	Directory directory = FSDirectory.open(path);
 	     	IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
-			writer = new IndexWriter(directory,config);
-        }
+	     	writer = new IndexWriter(directory,config);
 		try {
             writer.deleteAll();
             writer.commit();
-            File[] files = new File(LuceneConstants.INDEX_DIR).listFiles();
-            for(File file:files) {
-            	if(!file.toString().contains("write")) {
-            		file.delete();
-            	}
-            }
-            ta_status.setText("All documents have been deleted.");
             writer.close();
+            ta_status.setText("All documents have been deleted.");
         } catch (IOException e) {
             e.printStackTrace();
         }

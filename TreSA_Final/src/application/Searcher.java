@@ -66,7 +66,7 @@ public class Searcher {
 		Path indexPath = Paths.get(indexDirectoryPath);
 		indexDirectory = FSDirectory.open(indexPath);
 		indexReader = DirectoryReader.open(indexDirectory);
-		indexSearcher = new IndexSearcher(indexReader);
+		indexSearcher = new IndexSearcher(indexReader);	
 	}
 	
 	public TopDocs search(int choice, String input, String fieldType) throws IOException, ParseException {

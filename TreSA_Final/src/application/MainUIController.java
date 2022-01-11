@@ -36,6 +36,7 @@ public class MainUIController {
 		errorLabel.setVisible(false);
 		Boolean fields=true,flag=true; 
 		File[] files = new File(LuceneConstants.INDEX_DIR).listFiles();
+		System.out.println(files.length);
 		if(files.length==1||files.length==0) {
 			errorLabel.setText("No documents in indexer. Go to settings and import.");
 			errorLabel.setVisible(true);
@@ -126,7 +127,7 @@ public class MainUIController {
 			settingPage = loader.load();
 			Scene settingScene = new Scene(settingPage);	
 		    SettingsController settingsController = loader.getController();
-		    settingsController.showDocsInIndexer();
+		 //   settingsController.showDocsInIndexer();
 			Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			settingStage.setScene(settingScene);
 			settingStage.show();
