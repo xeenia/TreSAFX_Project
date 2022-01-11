@@ -69,6 +69,10 @@ public class SettingsController {
 	IndexWriter writer;
 	
 	@FXML public void showDocsInIndexer() throws IOException {
+		print();
+	}
+	 
+	private void print() throws IOException {
 		Searcher seacrher = new Searcher(indexDir);
 		ta_indexer.setText("");
 		seacrher.printDocuments(ta_indexer);
@@ -84,6 +88,7 @@ public class SettingsController {
             writer.commit();
             writer.close();
             ta_status.setText("All documents have been deleted.");
+            print();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,6 +110,7 @@ public class SettingsController {
 			}
 			createIndex(documents);
 		}
+		print();
 	}
 	
 	// Going back to main UI when the back button its clicked
@@ -123,6 +129,7 @@ public class SettingsController {
 		
 		if(!documents.isEmpty())
 			createIndex(documents);	
+		print();
 	}
 	
 	// Taking the documents and delete them from Indexer
@@ -131,6 +138,7 @@ public class SettingsController {
 		if(!documents.isEmpty()) {
 			deleteSpecificDocs(documents);
 		}
+		print();
 	}
 
 	private boolean checkTheFileName(String article) {
@@ -184,9 +192,10 @@ public class SettingsController {
 		for(String article : documents){
 			writer.deleteDocuments(new Term(LuceneConstants.FILE_NAME,article));
 			writer.commit();
+			ta_status.setText("The document <<"+article+">> has been deleted.");
 		}
-		ta_status.setText("index contains deleted files: "+writer.hasDeletions());
 		writer.close();
+		print();
 	}
 	
 	@FXML void editSpecificDoc(ActionEvent event) throws IOException {

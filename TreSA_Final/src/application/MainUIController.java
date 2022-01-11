@@ -127,7 +127,7 @@ public class MainUIController {
 			settingPage = loader.load();
 			Scene settingScene = new Scene(settingPage);	
 		    SettingsController settingsController = loader.getController();
-		 //   settingsController.showDocsInIndexer();
+		    settingsController.showDocsInIndexer();
 			Stage settingStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			settingStage.setScene(settingScene);
 			settingStage.show();
